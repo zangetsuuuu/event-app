@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Wanted Sans';
+    src: url('../font/WantedSansVariable.woff2') format('woff2'),
+}
+
+body {
+    font-family: 'Wanted Sans', sans-serif;
+}
+
+@media only screen and (max-width: 768px) {
+    .divider, .date {
+        display: none;
+    }
+}
