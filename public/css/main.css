@@ -7,7 +7,7 @@ body {
     font-family: 'Wanted Sans', sans-serif;
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 576px) {
     .divider, .date {
         display: none;
     }
