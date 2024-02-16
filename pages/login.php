@@ -1,41 +1,69 @@
-<?php include '../includes/header.php'; ?>
+<?php
+include '../includes/header.php';
+require "../scripts/functions.php";
+// session_start();
+
+if (isset($_POST["login"])) {
+    
+    if (loginAccount($_POST)) {
+        header("location: home.php");
+        exit;
+    } else {
+        echo "
+            <script>
+                alert('Username atau password salah!');
+                document.location.href = 'login.php';
+            </script>";
+    }
+}
+?>
 
 <main>
     <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-xl-10">
-                <div class="card rounded-3 text-black shadow">
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col col-lg-10">
+                <div class="card border rounded-4 shadow animate__animated animate__fadeInDown">
                     <div class="row g-0">
-                        <div class="col-lg-6">
-                            <img src="../public/img/event-img-3.jpg" class="object-fit-cover rounded-start" width="462" height="588" alt="Cosplay Event Img">
+                        <div class="col-md-6 col-lg-5 d-none d-md-block">
+                            <img src="../public/img/webp/event-img-4.webp" alt="Event Img" class="img-fluid rounded-start-4">
                         </div>
-                        <div class="col-lg-6">
-                            <div class="card-body p-md-5 mx-md-4">
-                                <div class="text-center">
-                                    <h4 class="fw-bold mt-1 mb-5 pb-1"><i class="fa-solid fa-arrow-right-to-bracket me-3"></i>Login</h4>
-                                </div>
-                                <form>
-                                    <div class="form-outline mb-4">
-                                        <label class="form-label" for="form2Example11">Username</label>
-                                        <input type="email" id="form2Example11" class="form-control"
-                                            placeholder="John Doe" required>
+                        <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-5 text-black">
+                                <!-- Login Form Start -->
+                                <form action="" method="post">
+                                    <div class="d-flex align-items-center mb-3 pb-1">
+                                        <i class="fa-solid fa-arrow-right-to-bracket fa-xl me-3"></i>
+                                        <span class="h2 fw-bold mb-0">Login</span>
                                     </div>
-                                    <div class="form-outline mb-4">
-                                        <div class="d-flex justify-content-between">
-                                            <label class="form-label" for="password">Password</label>
-                                            <a class="text-muted" href="#">Forgot password?</a>
-                                        </div>
-                                        <input type="password" id="password" class="form-control" placeholder="********" required>
+                                    <div class="h5 fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
+                                        Enter your email and password.
                                     </div>
-                                    <div class="text-center pt-1 mb-4">
-                                        <button class="btn btn-dark mb-3 w-100" type="button">Log in</button>
+                                    <div class="form-floating mb-3">
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            placeholder="name@example.com">
+                                        <label for="email">Email address</label>
                                     </div>
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="mb-0 me-2">Don't have an account?
-                                            <span><a href="signup.php">Sign Up</a></span>
+                                    <div class="form-floating mb-3">
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                                        <label for="password">Password</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="checkbox" name="rememberMe" value="" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">
+                                            Remember Me
+                                        </label>
+                                    </div>
+                                    <div class="pt-1 mb-4 pb-2">
+                                        <button class="btn btn-dark btn-lg w-100" type="submit" name="login" style="letter-spacing: 1.5px;">Login</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <p class="text-muted text-center">Don't have an account? 
+                                            <a href="register.php" class="text-muted">Register</a>
                                         </p>
+                                        <a class="text-muted" href="#!">Forgot password?</a>
                                     </div>
                                 </form>
+                                <!-- Login Form End -->
                             </div>
                         </div>
                     </div>
