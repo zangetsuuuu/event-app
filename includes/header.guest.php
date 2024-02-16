@@ -7,6 +7,7 @@
     <title>Eventiqo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
     <link rel="stylesheet" href="public/css/main.css">
     <script src="https://kit.fontawesome.com/a404219d80.js" crossorigin="anonymous"></script>
 </head>
@@ -14,7 +15,7 @@
 <body>
     <!-- Navbar Start -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark" aria-label="navbar">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow animate__animated animate__fadeInDown" aria-label="navbar">
             <div class="container-fluid mx-5 my-1">
                 <div class="d-flex align-items-center">
                     <a class="navbar-brand" href="#">Eventiqo</a>
@@ -33,7 +34,7 @@
                             <a class="btn btn-dark px-3" aria-current="page" href="pages/login.php">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light px-3" href="pages/signup.php"><i class="fa-solid fa-sm fa-user-plus me-2"></i>Sign Up</a>
+                            <a class="btn btn-outline-light px-3" href="pages/signup.php"><i class="fa-solid fa-sm fa-user-plus me-2"></i>Register</a>
                         </li>
                     </ul>
                 </div>
