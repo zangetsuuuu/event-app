@@ -13,11 +13,8 @@
         </div>
         <div class="overflow-hidden animate__animated animate__fadeInUp animate__delay-1s" style="max-height: 50vh;">
             <div class="container px-5">
-                <img src="public/img/webp/event-img-1.webp" class="img-fluid border rounded-3 shadow-lg mb-4"
-                    alt="Example image" width="700" height="500" loading="lazy">
+                <img src="public/img/webp/event-img-1.webp" class="img-fluid border rounded-3 shadow-lg mb-4" alt="Main Image" width="700" height="500" loading="lazy">
             </div>
         </div>
     </div>
 </main>
-
-<?php include '../includes/footer.php'; ?>
