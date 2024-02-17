@@ -32,7 +32,7 @@ if (isset($_POST["register"])) {
                             <div class="card-body p-5 text-black">
                                 <form action="" method="post">
                                     <div class="d-flex align-items-center mb-3 pb-1">
-                                        <i class="fa-solid fa-user-plus fa-xl me-3"></i>
+                                        <i class="fa-solid fa-user-plus fa-2xl me-3"></i>
                                         <span class="h2 fw-bold mb-0">Register</span>
                                     </div>
                                     <div class="h5 fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
