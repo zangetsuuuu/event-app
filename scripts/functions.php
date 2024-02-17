@@ -1,6 +1,17 @@
 <?php
 require "database.php";
 
+function sqlQuery($query) {
+    global $conn;
+
+    $result = mysqli_query($conn, $query);
+    $data = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $data[] = $row;
+    }
+    return $data;
+}
+
 function registerAccount($data) {
     global $conn;
 
@@ -55,4 +66,16 @@ function loginAccount($data) {
             return true;
         }
     }
+}
+
+function logoutAccount() {
+    session_start();
+    session_unset();
+    session_destroy();
+
+    setcookie("id", "", time() - 3600);
+    setcookie("key", "", time() - 3600);
+
+    header("Location: login.php");
+    exit;
 }
