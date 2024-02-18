@@ -1,3 +1,5 @@
+Options -Indexes
+
 RewriteEngine On
-RewriteRule ^$ public/ [L]
-RewriteRule scripts - [F]
+RewriteRule ^$ public/ [L] # Redirect root URL to public/ directory
+RewriteRule scripts - [F] # Block access to scripts/ directory
