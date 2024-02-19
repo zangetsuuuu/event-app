@@ -1,7 +1,6 @@
 <?php
 include '../includes/header.php';
 require "../scripts/functions.php";
-// session_start();
 
 if (isset($_POST["login"])) {
     
@@ -11,7 +10,7 @@ if (isset($_POST["login"])) {
     } else {
         echo "
             <script>
-                alert('Username atau password salah!');
+                alert('Name or password are wrong!');
                 document.location.href = 'login.php';
             </script>";
     }

@@ -39,9 +39,9 @@ if (isset($_POST["register"])) {
                                         Create an account.
                                     </div>
                                     <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="username" id="username"
+                                        <input type="text" class="form-control" name="name" id="name"
                                             placeholder="John Doe" required>
-                                        <label for="username">Username</label>
+                                        <label for="name">Name</label>
                                     </div>
                                     <div class="form-floating mb-3">
                                         <input type="email" class="form-control" name="email" id="email"
