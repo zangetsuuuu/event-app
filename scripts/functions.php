@@ -15,7 +15,7 @@ function sqlQuery($query) {
 function registerAccount($data) {
     global $conn;
 
-    $username = strtolower(stripslashes($data["username"]));
+    $name = strtolower(stripslashes($data["name"]));
     $email = strtolower(stripslashes($data["email"]));
     $password = mysqli_real_escape_string($conn, $data["password"]);
 
@@ -34,7 +34,7 @@ function registerAccount($data) {
     $password = password_hash($password, PASSWORD_DEFAULT);
 
     // Tambah ke database
-    mysqli_query($conn, "INSERT INTO users (username, email, password) VALUES ('$username', '$email', '$password')");
+    mysqli_query($conn, "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
     return mysqli_affected_rows($conn);
 }
 
@@ -55,13 +55,14 @@ function loginAccount($data) {
             // Set session
             session_start();
             $_SESSION["login"] = true;
-            $_SESSION["username"] = $row["username"];
+            $_SESSION["user_id"] = $row["user_id"];
+            $_SESSION["name"] = $row["name"];
 
             // Cek remember me
             if (isset($_POST["rememberMe"])) {
                 // Set cookie
                 setcookie("id", $row["id"], time() + 3600);
-                setcookie("key", hash("sha256", $row["username"]), time() + 3600);
+                setcookie("key", hash("sha256", $row["name"]), time() + 3600);
             }
             return true;
         }
@@ -78,4 +79,34 @@ function logoutAccount() {
 
     header("Location: login.php");
     exit;
+}
+
+function createEvent($data) {
+    global $conn;
+
+    $userID = $data['userID'];
+    $eventName = htmlspecialchars($data['eventName']);
+    $eventDesc = htmlspecialchars($data['eventDesc']);
+    $eventDate = htmlspecialchars($data['eventDate']);
+    $deadline = htmlspecialchars($data['deadline']);
+    $maxParticipants = htmlspecialchars($data['maxParticipants']);
+    $feeFree = isset($data['feeFree']) ? 0 : '';
+    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : ($feeFree ? 0 : NULL);
+    $organizerName = htmlspecialchars($data['organizerName']);
+    $organizerEmail = htmlspecialchars($data['organizerEmail']);
+
+    $query = "INSERT INTO events (user_id, event_name, event_description, event_date, registration_deadline, max_participants, registration_fee, organizer_name, organizer_email, created_at, modified_at) VALUES ('$userID', '$eventName', '$eventDesc', '$eventDate', '$deadline', '$maxParticipants', '$fee', '$organizerName', '$organizerEmail', NOW(), NOW())";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function deleteEvent($data) {
+    global $conn;
+
+    $eventID = htmlspecialchars($data['eventID']);
+    $query = "DELETE FROM events WHERE event_id = $eventID";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
 }
