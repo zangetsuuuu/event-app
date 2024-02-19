@@ -11,4 +11,8 @@ body {
     .divider, .date {
         display: none;
     }
+
+    .detail-img {
+        height: 300px;
+    }
 }
