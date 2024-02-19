@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
     $currentFile = basename($_SERVER['PHP_SELF']);
-    $title = ucfirst(str_replace('_', ' ', pathinfo($currentFile, PATHINFO_FILENAME)));
+    $title = ucwords(str_replace('_', ' ', pathinfo($currentFile, PATHINFO_FILENAME)));
     echo "<title>Eventiqo - $title</title>";
     ?>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
@@ -17,7 +17,7 @@
 
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow animate__animated animate__fadeInDown">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow animate__animated animate__fadeInDown" style="z-index: 999;">
             <div class="container-fluid mx-lg-5 mx-3 my-1">
                 <div class="d-flex align-items-center">
                     <a class="navbar-brand" href="#">Eventiqo</a>
@@ -33,13 +33,13 @@
                 <div class="collapse navbar-collapse" id="navbar-mobile">
                     <ul class="navbar-nav ms-auto gap-3 mt-2 mb-2 mt-lg-0 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                            <a class="nav-link <?= ($currentFile == 'home.php') ? 'active' : ''; ?>" href="home.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">My Events</a>
+                            <a class="nav-link <?= ($currentFile == 'my_events.php') ? 'active' : ''; ?>" href="my_events.php">My Events</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="settings" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
+                            <a class="nav-link dropdown-toggle" href="" id="settings" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
                             <ul class="dropdown-menu" aria-labelledby="settings">
                                 <li><a class="dropdown-item" href="#">Edit Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
