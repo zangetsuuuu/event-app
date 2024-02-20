@@ -88,14 +88,21 @@ function createEvent($data) {
     $eventName = htmlspecialchars($data['eventName']);
     $eventDesc = htmlspecialchars($data['eventDesc']);
     $eventDate = htmlspecialchars($data['eventDate']);
-    $deadline = htmlspecialchars($data['deadline']);
+    $eventDeadline = htmlspecialchars($data['eventDeadline']);
+    $eventLocation = htmlspecialchars($data['eventLoc']);
     $maxParticipants = htmlspecialchars($data['maxParticipants']);
-    $feeFree = isset($data['feeFree']) ? 0 : '';
+    $feeFree = isset($data['feeFree']) ? 1 : 0;
     $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : ($feeFree ? 0 : NULL);
     $organizerName = htmlspecialchars($data['organizerName']);
     $organizerEmail = htmlspecialchars($data['organizerEmail']);
 
-    $query = "INSERT INTO events (user_id, event_name, event_description, event_date, registration_deadline, max_participants, registration_fee, organizer_name, organizer_email, created_at, modified_at) VALUES ('$userID', '$eventName', '$eventDesc', '$eventDate', '$deadline', '$maxParticipants', '$fee', '$organizerName', '$organizerEmail', NOW(), NOW())";
+    // Upload gambar
+    $eventImage = uploadImage();
+    if (!$eventImage) {
+        return false;
+    }
+
+    $query = "INSERT INTO events (user_id, event_name, event_description, event_date, event_location, event_image, registration_deadline, max_participants, registration_fee, organizer_name, organizer_email, created_at, modified_at) VALUES ('$userID', '$eventName', '$eventDesc', '$eventDate', '$eventLocation', '$eventImage', '$eventDeadline', '$maxParticipants', '$fee', '$organizerName', '$organizerEmail', NOW(), NOW())";
 
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
@@ -109,4 +116,35 @@ function deleteEvent($data) {
 
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
+}
+
+function uploadImage() {
+    $fileName = $_FILES["image"]["name"];
+    $fileSize = $_FILES["image"]["size"];
+    $error = $_FILES["image"]["error"];
+    $tmpName = $_FILES["image"]["tmp_name"];
+
+    // Check if the uploaded file is an image
+    $validImageExtensions = ["jpg", "jpeg", "png", "webp"];
+    $imageExtension = explode(".", $fileName);
+    $imageExtension = strtolower(end($imageExtension));
+    if (!in_array($imageExtension, $validImageExtensions)) {
+        echo "<script>alert('The file you uploaded is not an image!')</script>";
+        return false;
+    }
+
+    // Check image file size
+    if ($fileSize > 2000000) {
+        echo "<script>alert('The image size is too large!')</script>";
+        return false;
+    }
+
+    // Generate a new image name
+    $newImageName = uniqid();
+    $newImageName .= ".";
+    $newImageName .= $imageExtension;
+
+    // Image passed validation, ready to be uploaded
+    move_uploaded_file($tmpName, "../public/img/uploads/" . $newImageName);
+    return $newImageName;
 }
