@@ -35,8 +35,15 @@ else if (isset($_POST['deleteEvent'])) {
                 alert('Event Has Been Deleted!');
                 window.location.href = 'my_events.php';
             </script>";
+    } else {
+        echo "
+            <script>
+                alert('Something Wrong!');
+            </script>";
     }
-} else if (isset($_POST["logout"])) {
+}
+
+else if (isset($_POST["logout"])) {
     logoutAccount();
 }
 ?>
@@ -63,17 +70,17 @@ else if (isset($_POST['deleteEvent'])) {
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm">
                         <div class="position-relative">
-                            <img src="../public/img/webp/event-img-<?= $no; ?>.webp"
+                            <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
-                                style="max-height: 220px;">
+                                style="height: 220px;">
                             <div class="position-absolute bottom-0 start-0 px-3 py-1 w-100" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.1);">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between" style="font-size: 14px;">
                                     <div class="text-light">
                                         <i class="fa-solid fa-calendar me-1"></i>
-                                        <?= $row['event_date']; ?>
+                                        <?= date('d F Y', strtotime($row['event_date'])); ?>
                                     </div>
                                     <div class="text-light">
-                                        <?= $row['registration_fee'] == 0 ? 'Free' : '$' . $row['registration_fee']; ?>
+                                        <?= $row['registration_fee'] == 0 ? 'Free' : 'Rp. ' . $row['registration_fee']; ?>
                                     </div>
                                 </div>
                             </div>
@@ -136,7 +143,7 @@ else if (isset($_POST['deleteEvent'])) {
                 </div>
                 <div class="modal-body">
                     <?php foreach ($users as $row): ?>
-                        <form action="" method="post">
+                        <form action="" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="userID" value="<?= $row['user_id']; ?>">
                             <div class="form-label mb-3">
                                 <label for="eventName" class="fw-medium mb-2">Event Name</label>
@@ -149,35 +156,42 @@ else if (isset($_POST['deleteEvent'])) {
                                     style="resize: none;" placeholder="Enter event description" required></textarea>
                             </div>
                             <div class="row g-0 g-md-1 g-lg-4">
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-3">
                                     <div class="form-label mb-3">
                                         <label for="eventDate" class="fw-medium mb-2">Event Date</label>
                                         <input type="date" class="form-control" name="eventDate" id="eventDate"
                                             placeholder="Select event date" required>
                                     </div>
                                 </div>
+                                <div class="col-12 col-lg-3">
+                                    <div class="form-label mb-3">
+                                        <label for="eventDeadline" class="fw-medium mb-2">Registration Deadline</label>
+                                        <input type="date" class="form-control" name="eventDeadline" id="eventDeadline"
+                                            placeholder="Select registration deadline" required>
+                                    </div>
+                                </div>
                                 <div class="col-12 col-lg-6">
                                     <div class="form-label mb-3">
-                                        <label for="deadline" class="fw-medium mb-2">Registration Deadline</label>
-                                        <input type="date" class="form-control" name="deadline" id="deadline"
-                                            placeholder="Select registration deadline" required>
+                                        <label for="eventLoc" class="fw-medium mb-2">Location</label>
+                                        <input type="text" class="form-control" name="eventLoc" id="eventLoc"
+                                            placeholder="Enter event location" required>
                                     </div>
                                 </div>
                             </div>
                             <div class="row g-0 g-md-1 g-lg-4">
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-3">
                                     <div class="form-label mb-3">
                                         <label for="maxParticipants" class="fw-medium mb-2">Max Participants</label>
                                         <input type="text" class="form-control" name="maxParticipants" id="maxParticipants"
-                                            placeholder="Enter maximum participants" required>
+                                            placeholder="e.g. 100" required>
                                     </div>
                                 </div>
-                                <div class="col-12 col-lg-6">
+                                <div class="col-12 col-lg-3">
                                     <div class="form-label mb-3">
-                                        <label for="fee" class="fw-medium mb-2">Event Fee</label>
+                                        <label for="fee" class="fw-medium mb-2">Fee</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="fee" id="fee"
-                                                placeholder="Enter event fee">
+                                                placeholder="Rp.">
                                             <div class="input-group-append">
                                                 <div class="input-group-text rounded-start-0">
                                                     <input type="checkbox" class="me-2" id="feeFree" name="feeFree">
@@ -185,6 +199,12 @@ else if (isset($_POST['deleteEvent'])) {
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-label mb-3">
+                                        <label for="eventImage" class="fw-medium mb-2">Image</label>
+                                        <input type="file" class="form-control" name="image" id="eventImage" required>
                                     </div>
                                 </div>
                             </div>
