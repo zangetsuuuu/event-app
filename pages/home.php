@@ -21,18 +21,18 @@ if (isset($_POST["logout"])) {
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm">
                         <div class="position-relative">
-                            <img src="../public/img/webp/event-img-<?= $no; ?>.webp"
+                            <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
-                                style="max-height: 220px;">
+                                style="height: 220px;">
                             <div class="position-absolute bottom-0 start-0 px-3 py-1 w-100"
                                 style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.1);">
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between" style="font-size: 14px;">
                                     <div class="text-light">
                                         <i class="fa-solid fa-calendar me-1"></i>
-                                        <?= $row['event_date']; ?>
+                                        <?= date('d F Y', strtotime($row['event_date'])); ?>
                                     </div>
                                     <div class="text-light">
-                                        <?= $row['registration_fee'] == 0 ? 'Free' : '$' . $row['registration_fee']; ?>
+                                        <?= $row['registration_fee'] == 0 ? 'Free' : 'Rp. ' . $row['registration_fee']; ?>
                                     </div>
                                 </div>
                             </div>
