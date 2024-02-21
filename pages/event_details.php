@@ -24,7 +24,7 @@ if (isset($_GET['id'])) {
 <main>
     <!-- Event Details Card Start -->
     <div class="container mt-5 pt-5 mb-5">
-        <div class="card border shadow p-4 p-lg-5">
+        <div class="card border shadow p-4 p-lg-5 animate__animated animate__fadeInLeft animate__delay-1s">
             <div class="card-title h3 fw-bold mb-4">
                 <i class="fa-solid fa-sm fa-info-circle me-3"></i>Event Details
             </div>
@@ -47,14 +47,13 @@ if (isset($_GET['id'])) {
                         class="img-fluid object-fit-cover rounded-3 border border-2 h-100 w-100"
                         alt="<?= $row['event_name']; ?>">
                     <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 m-3"
-                        data-bs-toggle="modal" data-bs-target="#eventFullImage"><i
-                            class="fa-solid fa-arrows-up-down-left-right"></i>
+                        data-bs-toggle="modal" data-bs-target="#eventFullImage"><i class="fa-solid fa-arrows-up-down-left-right"></i>
                     </button>
                 </div>
                 <div class="h3 mb-4 mb-md-3">
                     <?= $row['event_name']; ?>
                 </div>
-                <div class="row g-0 g-md-2 text-secondary">
+                <div class="row g-0 g-md-2 text-secondary mb-3 mb-lg-0">
                     <div class="col-md-auto me-md-4 mb-2 mb-lg-4">
                         <i class="fa-solid fa-user-group me-2"></i>
                         <span>
@@ -70,7 +69,7 @@ if (isset($_GET['id'])) {
                     <div class="col-md-auto me-md-4 mb-2 mb-lg-4">
                         <i class="fa-solid fa-clock me-2"></i>
                         <span>Created on
-                            <?= date('d M Y', strtotime($row['created_at'])) . ' WIB'; ?>
+                            <?= date('d M Y', strtotime($row['created_at'])); ?>
                         </span>
                     </div>
                 </div>
@@ -102,10 +101,10 @@ if (isset($_GET['id'])) {
                     <div class="col-12 col-lg-6">
                         <label class="fw-medium mb-2">Fee:</label>
                         <input type="text" class="form-control-plaintext"
-                            value="<?= $row['registration_fee'] == 0 ? "Free" : 'Rp.' . $row['registration_fee']; ?>">
+                            value="<?= $row['registration_fee'] == 0 ? "Free" : 'Rp. ' . number_format($row['registration_fee'], 0, ',', '.'); ?>">
                     </div>
                 </div>
-                <div class="mb-2 mb-lg-4">
+                <div class="mb-4">
                     <label class="fw-medium mb-2">Location:</label>
                     <input type="text" class="form-control-plaintext" value="<?= $row['event_location']; ?>">
                 </div>
@@ -120,7 +119,7 @@ if (isset($_GET['id'])) {
     <!-- Event Details Card End -->
 
     <!-- Full Image Start -->
-    <div class="modal fade" id="eventFullImage" tabindex="-1" aria-labelledby="newEventLabel" aria-hidden="true">
+    <div class="modal fade" id="eventFullImage" tabindex="-1" aria-labelledby="fullImage" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-body">
@@ -137,6 +136,8 @@ if (isset($_GET['id'])) {
         </div>
     </div>
     <!-- Full Image End -->
+
+    <?php include "../includes/logout.popup.php"; ?>
 </main>
 
 <?php include "../includes/footer.php"; ?>

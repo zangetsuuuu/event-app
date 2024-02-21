@@ -41,7 +41,7 @@ else if (isset($_POST['deleteEvent'])) {
                 alert('Something Wrong!');
             </script>";
     }
-}
+} 
 
 else if (isset($_POST["logout"])) {
     logoutAccount();
@@ -51,7 +51,7 @@ else if (isset($_POST["logout"])) {
 <main>
     <!-- My Events Card List Start -->
     <div class="container mt-5 pt-5">
-        <div class="d-flex justify-content-between mb-4 border-bottom">
+        <div class="d-flex justify-content-between mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">My Events</div>
             <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newEvent">
                 <i class="fa-solid fa-plus me-2"></i>New Event
@@ -65,22 +65,23 @@ else if (isset($_POST["logout"])) {
         <!-- If user don't have an event End -->
 
         <div class="row g-4 d-flex justify-content-center">
-            <?php $no = 1; ?>
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm">
+                    <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-2s">
+                        <!-- Isi card event -->
                         <div class="position-relative">
                             <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
                                 style="height: 220px;">
-                            <div class="position-absolute bottom-0 start-0 px-3 py-1 w-100" style="backdrop-filter: blur(5px); background-color: rgba(0, 0, 0, 0.1);">
+                            <div class="position-absolute bottom-0 start-0 px-3 py-2 w-100"
+                                style="backdrop-filter: blur(6px); background-color: rgba(0, 0, 0, 0.1);">
                                 <div class="d-flex justify-content-between" style="font-size: 14px;">
                                     <div class="text-light">
                                         <i class="fa-solid fa-calendar me-1"></i>
-                                        <?= date('d F Y', strtotime($row['event_date'])); ?>
+                                        <?= date('d M Y', strtotime($row['event_date'])); ?>
                                     </div>
                                     <div class="text-light">
-                                        <?= $row['registration_fee'] == 0 ? 'Free' : 'Rp. ' . $row['registration_fee']; ?>
+                                        <?= $row['registration_fee'] == 0 ? "Free" : 'Rp. ' . number_format($row['registration_fee'], 0, ',', '.'); ?>
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +95,7 @@ else if (isset($_POST["logout"])) {
                                 <?= $row['organizer_name']; ?>
                             </p>
                             <div class="card-text mb-4">
-                                <div class="overflow-y-auto" style="max-height: 3rem;">
+                                <div class="overflow-y-auto" style="height: 48px;">
                                     <?= $row['event_description']; ?>
                                 </div>
                             </div>
@@ -112,20 +113,50 @@ else if (isset($_POST["logout"])) {
                                     </a>
                                 </div>
                                 <div class="col-6 col-lg-2">
-                                    <form action="" method="post">
+                                    <button class="btn btn-outline-danger w-100" data-bs-toggle="modal"
+                                        data-bs-target="#deleteID<?= $row['event_id']; ?>">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <span class="d-lg-none ms-2">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal konfirmasi penghapusan untuk event ini -->
+                <div class="modal fade" id="deleteID<?= $row['event_id']; ?>" tabindex="-1" aria-labelledby="deleteLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-body p-4">
+                                <div class="text-center mb-4">
+                                    <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round"
+                                        stroke-miterlimit="2" viewBox="0 0 24 24" width="80" height="80" fill="#DC3545"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="m20.015 6.506h-16v14.423c0 .591.448 1.071 1 1.071h14c.552 0 1-.48 1-1.071 0-3.905 0-14.423 0-14.423zm-5.75 2.494c.414 0 .75.336.75.75v8.5c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-8.5c0-.414.336-.75.75-.75zm-4.5 0c.414 0 .75.336.75.75v8.5c0 .414-.336.75-.75.75s-.75-.336-.75-.75v-8.5c0-.414.336-.75.75-.75zm-.75-5v-1c0-.535.474-1 1-1h4c.526 0 1 .465 1 1v1h5.254c.412 0 .746.335.746.747s-.334.747-.746.747h-16.507c-.413 0-.747-.335-.747-.747s.334-.747.747-.747zm4.5 0v-.5h-3v.5z"
+                                            fill-rule="nonzero" />
+                                    </svg>
+
+                                    <p class="mt-3">
+                                        Are you sure you want to delete "<?= $row['event_name']; ?>"?
+                                    </p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <button type="button" class="btn btn-outline-secondary w-50"
+                                        data-bs-dismiss="modal">Cancel
+                                    </button>
+                                    <form action="" method="post" class="w-50">
                                         <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
-                                        <button type="submit" class="btn btn-outline-danger w-100" name="deleteEvent"
-                                            onclick="return confirm('Delete <?= $row['event_name']; ?>?')">
-                                            <i class="fa-solid fa-trash"></i>
-                                            <span class="d-lg-none ms-2">Delete</span>
-                                        </button>
+                                        <button type="submit" name="deleteEvent"
+                                            class="btn btn-danger w-100">Delete</button>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php $no++ ?>
             <?php endforeach; ?>
         </div>
     </div>
@@ -136,7 +167,7 @@ else if (isset($_POST["logout"])) {
         <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="newEventLabel">
+                    <h1 class="modal-title fs-5 fw-bold" id="newEventLabel">
                         <i class="fa-solid fa-calendar-day me-2"></i>New Event
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -158,7 +189,7 @@ else if (isset($_POST["logout"])) {
                             <div class="row g-0 g-md-1 g-lg-4">
                                 <div class="col-12 col-lg-3">
                                     <div class="form-label mb-3">
-                                        <label for="eventDate" class="fw-medium mb-2">Event Date</label>
+                                        <label for="eventDate" class="fw-medium mb-2">Date</label>
                                         <input type="date" class="form-control" name="eventDate" id="eventDate"
                                             placeholder="Select event date" required>
                                     </div>
@@ -190,8 +221,7 @@ else if (isset($_POST["logout"])) {
                                     <div class="form-label mb-3">
                                         <label for="fee" class="fw-medium mb-2">Fee</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="fee" id="fee"
-                                                placeholder="Rp.">
+                                            <input type="text" class="form-control" name="fee" id="fee" placeholder="Rp.">
                                             <div class="input-group-append">
                                                 <div class="input-group-text rounded-start-0">
                                                     <input type="checkbox" class="me-2" id="feeFree" name="feeFree">
@@ -240,6 +270,8 @@ else if (isset($_POST["logout"])) {
         </div>
     </div>
     <!-- New Events Modal End -->
+
+    <?php include "../includes/logout.popup.php"; ?>
 </main>
 
 <?php include "../includes/footer.php"; ?>
