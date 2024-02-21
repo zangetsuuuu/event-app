@@ -9,6 +9,7 @@
     $title = ucfirst(str_replace('_', ' ', pathinfo($currentFile, PATHINFO_FILENAME)));
     echo "<title>Eventiqo - $title</title>";
     ?>
+    <link rel="shortcut icon" href="../public/img/favicon/favicon-1.svg" type="image/x-icon">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/animate.css/animate.min.css">
     <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">

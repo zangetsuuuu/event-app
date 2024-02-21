@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventiqo</title>
+    <link rel="shortcut icon" href="../public/img/favicon/favicon-1.svg" type="image/x-icon">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
@@ -18,7 +19,10 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow animate__animated animate__fadeInDown" aria-label="navbar">
             <div class="container-fluid mx-lg-5 mx-3 my-1">
                 <div class="d-flex align-items-center">
-                    <a class="navbar-brand" href="#">Eventiqo</a>
+                    <a class="navbar-brand d-flex align-items-center" href="#">
+                        <img src="../public/img/favicon/favicon-1.svg" class="me-2 pe-1" height="24" alt="">
+                        <span>Eventiqo</span>
+                    </a>
                     <span class="text-secondary me-3 mt-2 divider vr" style="height: 25px;"></span>
                     <span class="text-secondary date" style="font-size: 14px;"><?php include_once "../scripts/date.php"; ?></span>
                 </div>

@@ -9,6 +9,7 @@
     $title = ucwords(str_replace('_', ' ', pathinfo($currentFile, PATHINFO_FILENAME)));
     echo "<title>Eventiqo - $title</title>";
     ?>
+    <link rel="shortcut icon" href="../public/img/favicon/favicon-1.svg" type="image/x-icon">
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="../node_modules/animate.css/animate.min.css">
     <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free/css/all.min.css">
@@ -20,7 +21,10 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow animate__animated animate__fadeInDown" style="z-index: 999;">
             <div class="container-fluid mx-lg-5 mx-3 my-1">
                 <div class="d-flex align-items-center">
-                    <a class="navbar-brand" href="#">Eventiqo</a>
+                    <a class="navbar-brand d-flex align-items-center" href="home.php">
+                        <img src="../public/img/favicon/favicon-1.svg" class="me-2 pe-1" height="24" alt="">
+                        <span>Eventiqo</span>
+                    </a>
                     <span class="text-secondary me-3 mt-2 divider vr" style="height: 25px;"></span>
                     <span class="text-secondary date" style="font-size: 14px;">
                         <?php include_once "../scripts/date.php"; ?>
@@ -44,11 +48,9 @@
                                 <li><a class="dropdown-item" href="#">Edit Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <form action="" method="post">
-                                        <button type="submit" class="btn btn-link dropdown-item text-danger fw-bold" onclick="return confirm('Logout and back to login page?')" name="logout">
-                                            <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
-                                        </button>
-                                    </form>
+                                    <button class="btn btn-link dropdown-item text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#logoutPopup">
+                                        <i class="fa-solid fa-sign-out-alt me-2"></i>Logout
+                                    </button>
                                 </li>
                             </ul>
                         </li>
