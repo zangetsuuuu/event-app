@@ -91,8 +91,7 @@ function createEvent($data) {
     $eventDeadline = htmlspecialchars($data['eventDeadline']);
     $eventLocation = htmlspecialchars($data['eventLoc']);
     $maxParticipants = htmlspecialchars($data['maxParticipants']);
-    $feeFree = isset($data['feeFree']) ? 1 : 0;
-    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : ($feeFree ? 0 : NULL);
+    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : '0';
     $organizerName = htmlspecialchars($data['organizerName']);
     $organizerEmail = htmlspecialchars($data['organizerEmail']);
 
@@ -103,6 +102,50 @@ function createEvent($data) {
     }
 
     $query = "INSERT INTO events (user_id, event_name, event_description, event_date, event_location, event_image, registration_deadline, max_participants, registration_fee, organizer_name, organizer_email, created_at, modified_at) VALUES ('$userID', '$eventName', '$eventDesc', '$eventDate', '$eventLocation', '$eventImage', '$eventDeadline', '$maxParticipants', '$fee', '$organizerName', '$organizerEmail', NOW(), NOW())";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
+function editEvent($data) {
+    global $conn;
+
+    $eventID = $data['eventID'];
+    $eventName = htmlspecialchars($data['eventName']);
+    $eventDesc = htmlspecialchars($data['eventDesc']);
+    $eventDate = htmlspecialchars($data['eventDate']);
+    $eventDeadline = htmlspecialchars($data['eventDeadline']);
+    $eventLocation = htmlspecialchars($data['eventLoc']);
+    $maxParticipants = htmlspecialchars($data['maxParticipants']);
+    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : '0';
+    $organizerName = htmlspecialchars($data['organizerName']);
+    $organizerEmail = htmlspecialchars($data['organizerEmail']);
+    $eventImage = '';
+
+    // Check if user upload a image
+    if (!empty($_FILES['image']['name'])) {
+        $eventImage = uploadImage();
+        if (!$eventImage) {
+            return false;
+        }
+    } else {
+        $query = sqlQuery("SELECT event_image FROM events WHERE event_id = '$eventID'");
+        $eventImage = $query[0]['event_image'];
+    }
+    
+    $query = "UPDATE events SET 
+                event_name = '$eventName', 
+                event_description = '$eventDesc', 
+                event_date = '$eventDate', 
+                event_location = '$eventLocation', 
+                event_image = '$eventImage', 
+                registration_deadline = '$eventDeadline', 
+                max_participants = '$maxParticipants', 
+                registration_fee = '$fee', 
+                organizer_name = '$organizerName', 
+                organizer_email = '$organizerEmail', 
+                modified_at = NOW()
+              WHERE event_id = '$eventID'";
 
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);

@@ -1,5 +1,12 @@
 Options -Indexes
 
 RewriteEngine On
-RewriteRule ^$ public/ [L] # Redirect root URL to public/ directory
-RewriteRule scripts - [F] # Block access to scripts/ directory
+
+# Redirect root URL to public/ directory
+RewriteRule ^$ public/ [L]
+
+# Block access to the 'pages/' directory if the file doesn't exist.
+RewriteRule ^pages/?$ /public/index.php [L]
+
+# Block access to scripts/ directory
+RewriteRule scripts - [F]
