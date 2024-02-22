@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventiqo</title>
-    <link rel="shortcut icon" href="../public/img/favicon/favicon-1.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="public/img/favicon/favicon-1.svg" type="image/x-icon">
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="node_modules/animate.css/animate.min.css">
     <link rel="stylesheet" href="node_modules/@fortawesome/fontawesome-free/css/all.min.css">
@@ -20,7 +20,7 @@
             <div class="container-fluid mx-lg-5 mx-3 my-1">
                 <div class="d-flex align-items-center">
                     <a class="navbar-brand d-flex align-items-center" href="#">
-                        <img src="../public/img/favicon/favicon-1.svg" class="me-2 pe-1" height="24" alt="">
+                        <img src="public/img/favicon/favicon-1.svg" class="me-2 pe-1" height="24" alt="">
                         <span>Eventiqo</span>
                     </a>
                     <span class="text-secondary me-3 mt-2 divider vr" style="height: 25px;"></span>
@@ -35,10 +35,12 @@
                 <div class="collapse navbar-collapse" id="navbar-mobile">
                     <ul class="navbar-nav ms-auto gap-3 mt-2 mb-2 mt-lg-0 mb-lg-0">
                         <li class="nav-item">
-                            <a class="btn btn-dark px-3" aria-current="page" href="pages/login.php">Login</a>
+                            <a class="btn btn-dark px-3 d-none d-md-block" href="pages/login.php">Login</a>
+                            <a class="nav-link d-md-none" href="pages/login.php">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-light px-3" href="pages/signup.php"><i class="fa-solid fa-sm fa-user-plus me-2"></i>Register</a>
+                            <a class="btn btn-outline-light px-3 d-none d-md-block" href="pages/register.php"><i class="fa-solid fa-sm fa-user-plus me-2"></i>Register</a>
+                            <a class="nav-link d-md-none" href="pages/register.php">Register</a>
                         </li>
                     </ul>
                 </div>
