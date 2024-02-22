@@ -1,7 +1,9 @@
 <?php
 session_start();
 include "../includes/header.logged.php";
-include "../scripts/functions.php";
+require "../scripts/functions.php";
+
+$id = $_SESSION['user_id'];
 
 $events = [];
 
@@ -18,6 +20,10 @@ if (isset($_GET['id'])) {
     } else {
         $string = true;
     }
+}
+
+if (isset($_POST["logout"])) {
+    logoutAccount();
 }
 ?>
 
@@ -47,7 +53,8 @@ if (isset($_GET['id'])) {
                         class="img-fluid object-fit-cover rounded-3 border border-2 h-100 w-100"
                         alt="<?= $row['event_name']; ?>">
                     <button class="btn btn-outline-secondary btn-sm position-absolute top-0 end-0 m-3"
-                        data-bs-toggle="modal" data-bs-target="#eventFullImage"><i class="fa-solid fa-arrows-up-down-left-right"></i>
+                        data-bs-toggle="modal" data-bs-target="#eventFullImage"><i
+                            class="fa-solid fa-arrows-up-down-left-right"></i>
                     </button>
                 </div>
                 <div class="h3 mb-4 mb-md-3">
@@ -108,11 +115,17 @@ if (isset($_GET['id'])) {
                     <label class="fw-medium mb-2">Location:</label>
                     <input type="text" class="form-control-plaintext" value="<?= $row['event_location']; ?>">
                 </div>
-                <form action="" method="post">
-                    <button type="submit" class="btn btn-dark w-100" name="joinEvent">
-                        <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                    </button>
-                </form>
+                <?php if ($row['user_id'] != $id): ?>
+                    <form action="" method="post">
+                        <button type="submit" class="btn btn-dark w-100" name="joinEvent">
+                            <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <a href="event_participants.php?id=<?= $row['event_id']; ?>" class="btn btn-dark w-100">
+                        <i class="fa-solid fa-users me-2"></i>Participants
+                    </a>
+                <?php endif; ?>
             <?php endforeach; ?>
         </div>
     </div>

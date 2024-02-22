@@ -3,7 +3,8 @@ session_start();
 include "../includes/header.logged.php";
 require "../scripts/functions.php";
 
-$events = sqlQuery("SELECT * FROM events");
+$id = $_SESSION['user_id'];
+$events = sqlQuery("SELECT * FROM events WHERE user_id != '$id'");
 
 if (isset($_POST["logout"])) {
     logoutAccount();
@@ -18,7 +19,7 @@ if (isset($_POST["logout"])) {
         <div class="row g-4 d-flex justify-content-center">
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-2s">
+                    <div class="card shadow-sm animate__animated animate__fadeInUp animate__delay-1s">
                         <div class="position-relative">
                             <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
@@ -49,9 +50,9 @@ if (isset($_POST["logout"])) {
                             </p>
                             <div class="row g-2">
                                 <div class="col-12 col-lg-10">
-                                    <a href="#" class="btn btn-dark w-100">
+                                    <button class="btn btn-dark w-100">
                                         <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                                    </a>
+                                    </button>
                                 </div>
                                 <div class="col-12 col-lg-2">
                                     <a href="event_details.php?id=<?= $row['event_id']; ?>"
