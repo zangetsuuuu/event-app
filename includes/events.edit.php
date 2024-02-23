@@ -11,6 +11,10 @@
             <div class="modal-body">
                 <form action="" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
+                    <?php foreach ($users as $user): ?>
+                        <input type="hidden" name="organizerName" value="<?= $user['name']; ?>">
+                        <input type="hidden" name="organizerEmail" value="<?= $user['email']; ?>">
+                    <?php endforeach; ?>
                     <div class="form-label mb-3">
                         <label for="eventName" class="fw-medium mb-2">Event Name</label>
                         <input type="text" class="form-control" name="eventName" id="eventName"
