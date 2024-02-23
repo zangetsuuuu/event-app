@@ -15,11 +15,11 @@ function sqlQuery($query) {
 function registerAccount($data) {
     global $conn;
 
-    $name = strtolower(stripslashes($data["name"]));
-    $email = strtolower(stripslashes($data["email"]));
+    $name = htmlspecialchars(stripslashes($data["name"]));
+    $email = htmlspecialchars(stripslashes($data["email"]));
     $password = mysqli_real_escape_string($conn, $data["password"]);
 
-    // Cek email sudah ada atau tidak
+    // Check email if exist or not
     $result = mysqli_query($conn, "SELECT email FROM users WHERE email = '$email'");
 
     if (mysqli_fetch_assoc($result)) {
@@ -30,10 +30,10 @@ function registerAccount($data) {
         return false;
     }
 
-    // Enkripsi password
+    // Encrypt Password
     $password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Tambah ke database
+    // Add to database
     mysqli_query($conn, "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
     return mysqli_affected_rows($conn);
 }
@@ -41,7 +41,7 @@ function registerAccount($data) {
 function loginAccount($data) {
     global $conn;
 
-    $email = strtolower(stripslashes($data["email"]));
+    $email = htmlspecialchars(stripslashes($data["email"]));
     $password = mysqli_real_escape_string($conn, $data["password"]);
 
     // Cek apakah data tersedia di database
@@ -159,6 +159,32 @@ function deleteEvent($data) {
 
     mysqli_query($conn, $query);
     return mysqli_affected_rows($conn);
+}
+
+function joinEvent($data) {
+    global $conn;
+
+    $eventID = $data['eventID'];
+    $userID = $data['userID'];
+
+    // Insert data into participants table
+    $query = "INSERT INTO participants (event_id, user_id, registration_date) VALUES ('$eventID', '$userID', NOW())";
+    mysqli_query($conn, $query);
+
+    // Insert data into joined_events table
+    $queryJoinedEvents = "INSERT INTO joined_events (event_id, user_id) VALUES ('$eventID', '$userID')";
+    mysqli_query($conn, $queryJoinedEvents);
+
+    return mysqli_affected_rows($conn);
+}
+
+function isUserJoined($userID, $eventID) {
+    global $conn;
+
+    $query = "SELECT * FROM joined_events WHERE user_id = '$userID' AND event_id = '$eventID'";
+    $result = mysqli_query($conn, $query);
+
+    return mysqli_num_rows($result) > 0;
 }
 
 function uploadImage() {

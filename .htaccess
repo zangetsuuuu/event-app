@@ -6,7 +6,7 @@ RewriteEngine On
 RewriteRule ^$ public/ [L]
 
 # Block access to the 'pages/' directory if the file doesn't exist.
-RewriteRule ^pages/?$ /public/index.php [L]
+RewriteRule ^pages/?$ /public/index.php [F]
 
 # Block access to scripts/ directory
 RewriteRule scripts - [F]
