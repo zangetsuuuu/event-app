@@ -1,66 +1,56 @@
 <?php
 session_start();
 include "../includes/header.logged.php";
+require "../includes/session.php";
 require "../scripts/functions.php";
 
-$id = $_SESSION['user_id'];
+$id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events WHERE user_id = '$id'");
 $users = sqlQuery("SELECT * FROM users WHERE user_id = '$id'");
 
-if ($events == null) {
-    $noData = true;
-}
-
-if (isset($_POST['createEvent'])) {
+if (isset($_POST["createEvent"])) {
 
     if (createEvent($_POST) > 0) {
         echo "
             <script>
-                alert('New Event Has Been Successfully Created!');
+                alert('A new event has been successfully created!');
                 window.location.href = 'my_events.php';
             </script>";
     } else {
         echo "
             <script>
-                alert('Something Wrong!');
+                alert('Something wrong!');
             </script>";
     }
-}
+} else if (isset($_POST["editEvent"])) {
 
-else if (isset($_POST["editEvent"])) {
-    
     if (editEvent($_POST) > 0) {
         echo "
             <script>
                 alert('Data saved!');
-                document.location.href = 'my_events.php';
+                window.location.href = 'my_events.php';
             </script>";
     } else {
         echo "
             <script>
                 alert('Data not saved!');
-                document.location.href = 'my_events.php';
             </script>";
     }
-}
-
-else if (isset($_POST['deleteEvent'])) {
+} else if (isset($_POST["deleteEvent"])) {
 
     if (deleteEvent($_POST) > 0) {
         echo "
             <script>
-                alert('Event Has Been Deleted!');
+                alert('Event has been deleted!');
                 window.location.href = 'my_events.php';
             </script>";
     } else {
         echo "
             <script>
-                alert('Something Wrong!');
+                alert('Something wrong!');
             </script>";
     }
-}
-
-else if (isset($_POST["logout"])) {
+} else if (isset($_POST["logout"])) {
     logoutAccount();
 }
 ?>
@@ -68,7 +58,8 @@ else if (isset($_POST["logout"])) {
 <main>
     <!-- My Events Card List Start -->
     <div class="container mt-5 pt-5">
-        <div class="d-flex justify-content-between mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
+        <div
+            class="d-flex justify-content-between mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">My Events</div>
             <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newEvent">
                 <i class="fa-solid fa-plus me-2"></i>New Event
@@ -76,15 +67,15 @@ else if (isset($_POST["logout"])) {
         </div>
 
         <!-- If user don't have an event Start -->
-        <?php if (isset($noData)): ?>
-            <div class="alert alert-light text-center" role="alert">You don't have an event</div>
+        <?php if (empty($events)): ?>
+            <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">You don't have an event</div>
         <?php endif; ?>
         <!-- If user don't have an event End -->
 
         <div class="row g-4 d-flex justify-content-center">
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
                         <!-- Isi card event -->
                         <div class="position-relative">
                             <img src="../public/img/uploads/<?= $row['event_image']; ?>"

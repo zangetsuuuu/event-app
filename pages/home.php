@@ -1,12 +1,28 @@
 <?php
 session_start();
 include "../includes/header.logged.php";
+require "../includes/session.php";
 require "../scripts/functions.php";
 
-$id = $_SESSION['user_id'];
+$id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events WHERE user_id != '$id'");
 
-if (isset($_POST["logout"])) {
+if (isset($_POST["joinEvent"])) {
+
+    if (joinEvent($_POST) > 0) {
+        echo "
+            <script>
+                alert('You have joined the event!');
+            </script>";
+    } else {
+        echo "
+            <script>
+                alert('Something wrong!');
+            </script>";
+    }
+}
+
+else if (isset($_POST["logout"])) {
     logoutAccount();
 }
 ?>
@@ -19,7 +35,7 @@ if (isset($_POST["logout"])) {
         <div class="row g-4 d-flex justify-content-center">
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
-                    <div class="card shadow-sm animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
                         <div class="position-relative">
                             <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
@@ -50,9 +66,20 @@ if (isset($_POST["logout"])) {
                             </p>
                             <div class="row g-2">
                                 <div class="col-12 col-lg-10">
-                                    <button class="btn btn-dark w-100">
-                                        <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                                    </button>
+                                    <?php $isJoined = isUserJoined($id, $row['event_id']); ?>         
+                                    <form action="" method="post">
+                                        <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
+                                        <input type="hidden" name="userID" value="<?= $id; ?>">
+                                        <?php if ($isJoined): ?>
+                                            <button class="btn btn-dark w-100" name="joinEvent" disabled>
+                                                <i class="fa-solid fa-calendar-check me-2"></i> Joined
+                                            </button>
+                                        <?php else: ?>
+                                            <button class="btn btn-dark w-100" name="joinEvent">
+                                                <i class="fa-solid fa-calendar-plus me-2"></i> Join Event
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
                                 </div>
                                 <div class="col-12 col-lg-2">
                                     <a href="event_details.php?id=<?= $row['event_id']; ?>"

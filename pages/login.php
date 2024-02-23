@@ -1,5 +1,6 @@
 <?php
-include '../includes/header.php';
+session_start();
+include "../includes/header.php";
 require "../scripts/functions.php";
 
 if (isset($_POST["login"])) {
@@ -11,9 +12,14 @@ if (isset($_POST["login"])) {
         echo "
             <script>
                 alert('Name or password are wrong!');
-                document.location.href = 'login.php';
+                window.location.href = 'login.php';
             </script>";
     }
+}
+
+if (isset($_SESSION["login"])) {
+    header("location: home.php");
+    exit;
 }
 ?>
 

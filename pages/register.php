@@ -7,13 +7,13 @@ if (isset($_POST["register"])) {
     if (registerAccount($_POST) > 0) {
         echo "
             <script>
-                alert('User baru berhasil ditambahkan!');
-                document.location.href = 'login.php';
+                alert('A new user has been added!');
+                window.location.href = 'login.php';
             </script>";
     } else {
         echo "
             <script>
-                document.location.href = 'register.php';
+                window.location.href = 'register.php';
             </script>";
     }
 }

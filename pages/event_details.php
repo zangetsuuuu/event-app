@@ -1,10 +1,10 @@
 <?php
 session_start();
 include "../includes/header.logged.php";
+require "../includes/session.php";
 require "../scripts/functions.php";
 
 $id = $_SESSION['user_id'];
-
 $events = [];
 
 if (isset($_GET['id'])) {
@@ -13,16 +13,28 @@ if (isset($_GET['id'])) {
     // Check if the event ID is a number
     if (is_numeric($eventID)) {
         $events = sqlQuery("SELECT * FROM events WHERE event_id = $eventID");
-
-        if ($events == null) {
-            $noData = true;
-        }
     } else {
-        $string = true;
+        $notNumeric = true;
     }
 }
 
-if (isset($_POST["logout"])) {
+if (isset($_POST["joinEvent"])) {
+
+    if (joinEvent($_POST) > 0) {
+        echo "
+            <script>
+                alert('You have joined the event!');
+            </script>";
+    } else {
+        echo "
+            <script>
+                alert('Something wrong!');
+            </script>";
+    }
+}
+
+
+else if (isset($_POST["logout"])) {
     logoutAccount();
 }
 ?>
@@ -36,13 +48,13 @@ if (isset($_POST["logout"])) {
             </div>
 
             <!-- If event id doesn't exist Start -->
-            <?php if (isset($noData)): ?>
+            <?php if (empty($events)): ?>
                 <div class="alert alert-danger text-center" role="alert">Event Doesn't Exist!</div>
             <?php endif; ?>
             <!-- If event id doesn't exist End -->
 
             <!-- If event id is string Start -->
-            <?php if (isset($string)): ?>
+            <?php if (isset($notNumeric)): ?>
                 <div class="alert alert-danger text-center" role="alert">Something Wrong!</div>
             <?php endif; ?>
             <!-- If event id is string End -->
@@ -116,10 +128,19 @@ if (isset($_POST["logout"])) {
                     <input type="text" class="form-control-plaintext" value="<?= $row['event_location']; ?>">
                 </div>
                 <?php if ($row['user_id'] != $id): ?>
+                    <?php $isJoined = isUserJoined($id, $row['event_id']); ?>         
                     <form action="" method="post">
-                        <button type="submit" class="btn btn-dark w-100" name="joinEvent">
-                            <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                        </button>
+                        <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
+                        <input type="hidden" name="userID" value="<?= $id; ?>">
+                        <?php if ($isJoined): ?>
+                            <button class="btn btn-dark w-100" name="joinEvent" disabled>
+                                <i class="fa-solid fa-calendar-check me-2"></i> Joined
+                            </button>
+                        <?php else: ?>
+                            <button class="btn btn-dark w-100" name="joinEvent">
+                                <i class="fa-solid fa-calendar-plus me-2"></i> Join Event
+                            </button>
+                        <?php endif; ?>
                     </form>
                 <?php else: ?>
                     <a href="event_participants.php?id=<?= $row['event_id']; ?>" class="btn btn-dark w-100">
