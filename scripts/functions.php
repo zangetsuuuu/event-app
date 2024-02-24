@@ -44,11 +44,11 @@ function loginAccount($data) {
     $email = htmlspecialchars(stripslashes($data["email"]));
     $password = mysqli_real_escape_string($conn, $data["password"]);
 
-    // Cek apakah data tersedia di database
+    // Check if data is available in the database
     $result = mysqli_query($conn, "SELECT * FROM users WHERE email = '$email'");
 
     if (mysqli_num_rows($result) === 1) {
-        // Cek kesesuaian password
+        // Check password match
         $row = mysqli_fetch_assoc($result);
 
         if (password_verify($password, $row["password"])) {
@@ -58,7 +58,7 @@ function loginAccount($data) {
             $_SESSION["user_id"] = $row["user_id"];
             $_SESSION["name"] = $row["name"];
 
-            // Cek remember me
+            // Check remember me
             if (isset($_POST["rememberMe"])) {
                 // Set cookie
                 setcookie("id", $row["id"], time() + 3600);
@@ -95,7 +95,7 @@ function createEvent($data) {
     $organizerName = htmlspecialchars($data['organizerName']);
     $organizerEmail = htmlspecialchars($data['organizerEmail']);
 
-    // Upload gambar
+    // Upload image
     $eventImage = uploadImage();
     if (!$eventImage) {
         return false;
@@ -167,13 +167,8 @@ function joinEvent($data) {
     $eventID = $data['eventID'];
     $userID = $data['userID'];
 
-    // Insert data into participants table
     $query = "INSERT INTO participants (event_id, user_id, registration_date) VALUES ('$eventID', '$userID', NOW())";
     mysqli_query($conn, $query);
-
-    // Insert data into joined_events table
-    $queryJoinedEvents = "INSERT INTO joined_events (event_id, user_id) VALUES ('$eventID', '$userID')";
-    mysqli_query($conn, $queryJoinedEvents);
 
     return mysqli_affected_rows($conn);
 }
@@ -181,10 +176,27 @@ function joinEvent($data) {
 function isUserJoined($userID, $eventID) {
     global $conn;
 
-    $query = "SELECT * FROM joined_events WHERE user_id = '$userID' AND event_id = '$eventID'";
+    $query = "SELECT * FROM participants WHERE user_id = '$userID' AND event_id = '$eventID'";
     $result = mysqli_query($conn, $query);
 
     return mysqli_num_rows($result) > 0;
+}
+
+function isEventFull($eventID, $maxParticipants) {
+    global $conn;
+
+    // Query to retrieve the number of participants registered for a specific event
+    $query = "SELECT COUNT(*) AS total FROM participants WHERE event_id = '$eventID'";
+    $result = mysqli_query($conn, $query);
+
+    if ($result) {
+        $row = mysqli_fetch_assoc($result);
+        $total = $row['total'];
+
+        return $total == $maxParticipants;
+    } else {
+        return false;
+    }
 }
 
 function uploadImage() {
