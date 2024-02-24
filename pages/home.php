@@ -67,16 +67,21 @@ else if (isset($_POST["logout"])) {
                             <div class="row g-2">
                                 <div class="col-12 col-lg-10">
                                     <?php $isJoined = isUserJoined($id, $row['event_id']); ?>         
+                                    <?php $isFull = isEventFull($row['event_id'], $row['max_participants']); ?>         
                                     <form action="" method="post">
                                         <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
                                         <input type="hidden" name="userID" value="<?= $id; ?>">
                                         <?php if ($isJoined): ?>
                                             <button class="btn btn-dark w-100" name="joinEvent" disabled>
-                                                <i class="fa-solid fa-calendar-check me-2"></i> Joined
+                                                <i class="fa-solid fa-calendar-check me-2"></i>Joined
+                                            </button>
+                                        <?php elseif ($isFull): ?>
+                                            <button class="btn btn-danger w-100" name="joinEvent" disabled>
+                                                <i class="fa-solid fa-lock me-2"></i>Event Full
                                             </button>
                                         <?php else: ?>
                                             <button class="btn btn-dark w-100" name="joinEvent">
-                                                <i class="fa-solid fa-calendar-plus me-2"></i> Join Event
+                                                <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
                                             </button>
                                         <?php endif; ?>
                                     </form>
