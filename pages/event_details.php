@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
@@ -32,9 +33,7 @@ if (isset($_POST["joinEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-}
-
-else if (isset($_POST["logout"])) {
+} else if (isset($_POST["logout"])) {
     logoutAccount();
 }
 ?>
@@ -100,15 +99,15 @@ else if (isset($_POST["logout"])) {
                 <hr class="w-25">
                 <div class="row g-2 g-md-3 g-lg-4 mb-2 mb-lg-4 pt-3">
                     <div class="col-12 col-lg-6">
-                        <div class="fw-medium mb-3">Date:</div>
+                        <div class="fw-medium mb-3">Datetime:</div>
                         <div class="mb-2">
-                            <?= date('d F Y', strtotime($row['event_date'])); ?>
+                            <?= date('d F Y, H:i', strtotime($row['event_date'])); ?> WIB
                         </div>
                     </div>
                     <div class="col-12 col-lg-6">
                         <label class="fw-medium mb-3">Registration Deadline:</label>
                         <div class="mb-2">
-                            <?= date('d F Y', strtotime($row['registration_deadline'])); ?>
+                            <?= date('d F Y, H:i', strtotime($row['registration_deadline'])); ?> WIB
                         </div>
                     </div>
                 </div>
@@ -116,7 +115,8 @@ else if (isset($_POST["logout"])) {
                     <div class="col-12 col-lg-6">
                         <label class="fw-medium mb-2">Participants:</label>
                         <?php foreach ($totalParticipants as $participants): ?>
-                            <input type="text" class="form-control-plaintext" value="<?= $participants['total'] . '/' . $row['max_participants']; ?>">
+                            <input type="text" class="form-control-plaintext"
+                                value="<?= $participants['total'] . '/' . $row['max_participants']; ?>">
                         <?php endforeach; ?>
                     </div>
                     <div class="col-12 col-lg-6">
@@ -130,18 +130,32 @@ else if (isset($_POST["logout"])) {
                     <input type="text" class="form-control-plaintext" value="<?= $row['event_location']; ?>">
                 </div>
                 <?php if ($row['user_id'] != $id): ?>
-                    <?php $isJoined = isUserJoined($id, $row['event_id']); ?>
-                    <?php $isFull = isEventFull($row['event_id'], $row['max_participants']); ?>
+                    <?php
+                    $isJoined = isUserJoined($id, $row['event_id']);
+                    $isFull = isEventFull($row['event_id'], $row['max_participants']);
+                    $isPassed = isDatePassed($row['registration_deadline']);
+                    $isUpcoming = timeToEvent($row['event_date']);
+                    $isEventPassed = isDatePassed($row['event_date']);
+                    ?>
                     <form action="" method="post">
                         <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
                         <input type="hidden" name="userID" value="<?= $id; ?>">
-                        <?php if ($isJoined): ?>
-                            <button class="btn btn-dark w-100" name="joinEvent" disabled>
-                                <i class="fa-solid fa-calendar-check me-2"></i>Joined
+                        <?php if ($isUpcoming && $isJoined): ?>
+                            <button class="btn btn-dark w-100" disabled>
+                                <i class="fa-solid fa-hourglass-start me-2"></i>
+                                <?= $isUpcoming; ?>
                             </button>
                         <?php elseif ($isFull): ?>
-                            <button class="btn btn-danger w-100" name="joinEvent" disabled>
-                                <i class="fa-solid fa-lock me-2"></i>Event Full
+                            <button class="btn btn-danger w-100" disabled>
+                                <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
+                            </button>
+                        <?php elseif ($isPassed): ?>
+                            <button class="btn btn-secondary w-100" disabled>
+                                <i class="fa-solid fa-lock me-2"></i>Closed
+                            </button>
+                        <?php elseif ($isEventPassed): ?>
+                            <button class="btn btn-success w-100" disabled>
+                                <i class="fa-solid fa-check me-2"></i>Event Passed
                             </button>
                         <?php else: ?>
                             <button class="btn btn-dark w-100" name="joinEvent">
@@ -154,6 +168,7 @@ else if (isset($_POST["logout"])) {
                         <i class="fa-solid fa-users me-2"></i>Participants
                     </a>
                 <?php endif; ?>
+
             <?php endforeach; ?>
         </div>
     </div>

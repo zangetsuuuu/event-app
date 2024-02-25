@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
@@ -27,13 +28,13 @@ if (isset($_POST["createEvent"])) {
     if (editEvent($_POST) > 0) {
         echo "
             <script>
-                alert('Data saved!');
+                alert('Changes saved!');
                 window.location.href = 'my_events.php';
             </script>";
     } else {
         echo "
             <script>
-                alert('Data not saved!');
+                alert('Changes not saved!');
             </script>";
     }
 } else if (isset($_POST["deleteEvent"])) {

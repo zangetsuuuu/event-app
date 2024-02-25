@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
@@ -66,18 +67,25 @@ else if (isset($_POST["logout"])) {
                             </p>
                             <div class="row g-2">
                                 <div class="col-12 col-lg-10">
-                                    <?php $isJoined = isUserJoined($id, $row['event_id']); ?>         
-                                    <?php $isFull = isEventFull($row['event_id'], $row['max_participants']); ?>         
+                                    <?php
+                                    $isJoined = isUserJoined($id, $row['event_id']);        
+                                    $isFull = isEventFull($row['event_id'], $row['max_participants']);   
+                                    $isPassed = isDatePassed($row['registration_deadline']); 
+                                    ?>         
                                     <form action="" method="post">
                                         <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
                                         <input type="hidden" name="userID" value="<?= $id; ?>">
                                         <?php if ($isJoined): ?>
-                                            <button class="btn btn-dark w-100" name="joinEvent" disabled>
+                                            <button class="btn btn-dark w-100" disabled>
                                                 <i class="fa-solid fa-calendar-check me-2"></i>Joined
                                             </button>
                                         <?php elseif ($isFull): ?>
-                                            <button class="btn btn-danger w-100" name="joinEvent" disabled>
-                                                <i class="fa-solid fa-lock me-2"></i>Event Full
+                                            <button class="btn btn-danger w-100" disabled>
+                                                <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
+                                            </button>
+                                        <?php elseif ($isPassed): ?>
+                                            <button class="btn btn-secondary w-100" disabled>
+                                                <i class="fa-solid fa-lock me-2"></i>Closed
                                             </button>
                                         <?php else: ?>
                                             <button class="btn btn-dark w-100" name="joinEvent">
