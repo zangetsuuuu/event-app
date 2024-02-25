@@ -26,15 +26,15 @@
                         <div class="row g-0 g-md-1 g-lg-4">
                             <div class="col-12 col-lg-6">
                                 <div class="form-label mb-3">
-                                    <label for="eventDate" class="fw-medium mb-2">Date</label>
-                                    <input type="date" class="form-control" name="eventDate" id="eventDate"
+                                    <label for="eventDate" class="fw-medium mb-2">Datetime</label>
+                                    <input type="datetime-local" class="form-control" name="eventDate" id="eventDate"
                                         placeholder="Select event date" required>
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6">
                                 <div class="form-label mb-3">
                                     <label for="eventDeadline" class="fw-medium mb-2">Registration Deadline</label>
-                                    <input type="date" class="form-control" name="eventDeadline" id="eventDeadline"
+                                    <input type="datetime-local" class="form-control" name="eventDeadline" id="eventDeadline"
                                         placeholder="Select registration deadline" required>
                                 </div>
                             </div>

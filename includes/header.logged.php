@@ -43,9 +43,10 @@
                             <a class="nav-link <?= ($currentFile == 'my_events.php') ? 'active' : ''; ?>" href="my_events.php">My Events</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="" id="settings" data-bs-toggle="dropdown" aria-expanded="false">Settings</a>
-                            <ul class="dropdown-menu" aria-labelledby="settings">
-                                <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                            <a class="nav-link dropdown-toggle" href="" id="menu" data-bs-toggle="dropdown" aria-expanded="false">Menu</a>
+                            <ul class="dropdown-menu" aria-labelledby="menu">
+                                <li><a class="dropdown-item <?= ($currentFile == 'upcoming_events.php') ? 'active' : ''; ?>" href="upcoming_events.php">Upcoming Events</a></li>
+                                <li><a class="dropdown-item <?= ($currentFile == 'profile.php') ? 'active' : ''; ?>" href="profile.php">Profile</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <button class="btn btn-link dropdown-item text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#logoutPopup">
