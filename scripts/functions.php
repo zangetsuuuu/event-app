@@ -72,10 +72,8 @@ function loginAccount($data) {
 function logoutAccount() {
     session_start();
     session_unset();
+    $_SESSION = [];
     session_destroy();
-
-    setcookie("id", "", time() - 3600);
-    setcookie("key", "", time() - 3600);
 
     header("Location: login.php");
     exit;
@@ -197,6 +195,33 @@ function isEventFull($eventID, $maxParticipants) {
     } else {
         return false;
     }
+}
+
+function isDatePassed($date) {
+    $dateTimestamp = strtotime($date);
+    $currentTimestamp = time();
+
+    return $currentTimestamp > $dateTimestamp;
+}
+
+function timeToEvent($eventDate) {
+    $eventTimestamp = strtotime($eventDate);
+    $currentTimestamp = time();
+    $difference = $eventTimestamp - $currentTimestamp;
+
+    $days = floor($difference / (60 * 60 * 24));
+    $hours = floor(($difference % (60 * 60 * 24)) / (60 * 60));
+
+    // Construct the string for time remaining
+    $timeRemaining = '';
+    if ($days > 0) {
+        $timeRemaining .= "$days days ";
+    }
+    if ($hours > 0) {
+        $timeRemaining .= "$hours hours";
+    }
+
+    return trim($timeRemaining);
 }
 
 function uploadImage() {
