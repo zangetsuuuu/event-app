@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start();
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
@@ -37,6 +38,13 @@ if (isset($_POST["createEvent"])) {
                 alert('Changes not saved!');
             </script>";
     }
+} else if (isset($_GET["keyword"])) {
+    $keyword = htmlspecialchars($_GET["keyword"]);
+    $events = searchEvent($keyword, $id);
+
+    if (empty($events)) {
+        $notFound = true;
+    }
 } else if (isset($_POST["deleteEvent"])) {
 
     if (deleteEvent($_POST) > 0) {
@@ -53,6 +61,7 @@ if (isset($_POST["createEvent"])) {
     }
 } else if (isset($_POST["logout"])) {
     logoutAccount();
+    exit;
 }
 ?>
 
@@ -62,18 +71,25 @@ if (isset($_POST["createEvent"])) {
         <div
             class="d-flex justify-content-between mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">My Events</div>
-            <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#newEvent">
+            <button class="btn btn-link text-success" data-bs-toggle="modal" data-bs-target="#newEvent">
                 <i class="fa-solid fa-plus me-2"></i>New Event
             </button>
         </div>
 
-        <!-- If user don't have an event Start -->
-        <?php if (empty($events)): ?>
-            <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">You don't have an event</div>
+        <?php if (empty($events) && !isset($notFound)): ?>
+            <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
+                <i class="fa-solid fa-warning me-2 pe-1"></i>You don't have an event
+            </div>
+        <?php elseif (isset($notFound)): ?>
+            <div class="alert alert-danger text-center animate__animated animate__fadeInDown animate__delay-1s"
+                role="alert">
+                <i class="fa-solid fa-warning me-2 pe-1"></i>No event found
+            </div>
+            <?php unset($notFound); ?>
         <?php endif; ?>
-        <!-- If user don't have an event End -->
 
-        <div class="row g-4 d-flex justify-content-center">
+
+        <div class="row g-4 d-flex justify-content-start">
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
@@ -115,41 +131,43 @@ if (isset($_POST["createEvent"])) {
                                         <i class="fa-solid fa-pen me-2"></i>Edit Event
                                     </button>
                                 </div>
-                                <div class="col-6 col-lg-2">
-                                    <a href="event_details.php?id=<?= $row['event_id']; ?>"
-                                        class="btn btn-outline-secondary w-100">
-                                        <i class="fa-solid fa-info-circle"></i>
-                                        <span class="d-lg-none ms-2">Details</span>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-lg-2">
-                                    <button class="btn btn-outline-danger w-100" data-bs-toggle="modal"
-                                        data-bs-target="#deleteID<?= $row['event_id']; ?>">
-                                        <i class="fa-solid fa-trash"></i>
-                                        <span class="d-lg-none ms-2">Delete</span>
-                                    </button>
+                                <div class="col-12 col-lg-4">
+                                    <div class="dropup">
+                                        <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button"
+                                            id="eventMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                            More
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventMenu">
+                                            <li><a class="dropdown-item" href="event_details.php?id=<?= $row['event_id']; ?>">Details</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="event_participants.php?id=<?= $row['event_id']; ?>">Participants</a>
+                                            </li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li>
+                                                <button class="btn btn-link dropdown-item text-danger fw-bold" data-bs-toggle="modal" data-bs-target="#deleteID<?= $row['event_id']; ?>">
+                                                    <i class="fa-solid fa-trash me-2"></i>Delete
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Edit event Start -->
                 <?php include "../includes/events.edit.php"; ?>
-                <!-- Edit event End -->
 
-                <!-- Delete event Start -->
                 <?php include "../includes/events.delete.php"; ?>
-                <!-- Delete event End -->
 
             <?php endforeach; ?>
         </div>
     </div>
     <!-- My Events Card List End -->
 
-    <!-- New Events Modal Start -->
     <?php include "../includes/events.create.php"; ?>
-    <!-- New Events Modal End -->
+
+    <?php include "../includes/events.search.php"; ?>
 
     <?php include "../includes/logout.popup.php"; ?>
 </main>

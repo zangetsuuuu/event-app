@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start();
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
@@ -20,7 +21,7 @@ if (isset($_GET['id'])) {
     }
 }
 
-if (isset($_POST["joinEvent"])) {
+else if (isset($_POST["joinEvent"])) {
 
     if (joinEvent($_POST) > 0) {
         echo "
@@ -33,8 +34,11 @@ if (isset($_POST["joinEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-} else if (isset($_POST["logout"])) {
+}
+
+else if (isset($_POST["logout"])) {
     logoutAccount();
+    exit;
 }
 ?>
 
@@ -46,17 +50,11 @@ if (isset($_POST["joinEvent"])) {
                 <i class="fa-solid fa-sm fa-info-circle me-3"></i>Event Details
             </div>
 
-            <!-- If event id doesn't exist Start -->
             <?php if (empty($events)): ?>
                 <div class="alert alert-danger text-center" role="alert">Event Doesn't Exist!</div>
-            <?php endif; ?>
-            <!-- If event id doesn't exist End -->
-
-            <!-- If event id is string Start -->
-            <?php if (isset($notNumeric)): ?>
+            <?php elseif (isset($notNumeric)): ?>
                 <div class="alert alert-danger text-center" role="alert">Something Wrong!</div>
             <?php endif; ?>
-            <!-- If event id is string End -->
 
             <?php foreach ($events as $row): ?>
                 <div class="position-relative rounded-3 mb-4 w-100 detail-img" style="height: 400px;">
@@ -145,15 +143,15 @@ if (isset($_POST["joinEvent"])) {
                                 <i class="fa-solid fa-hourglass-start me-2"></i>
                                 <?= $isUpcoming; ?>
                             </button>
-                        <?php elseif ($isFull): ?>
+                        <?php elseif ($isFull && !$isPassed): ?>
                             <button class="btn btn-danger w-100" disabled>
                                 <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
                             </button>
-                        <?php elseif ($isPassed): ?>
+                        <?php elseif ($isPassed && !$isJoined): ?>
                             <button class="btn btn-secondary w-100" disabled>
                                 <i class="fa-solid fa-lock me-2"></i>Closed
                             </button>
-                        <?php elseif ($isEventPassed): ?>
+                        <?php elseif ($isEventPassed && $isJoined): ?>
                             <button class="btn btn-success w-100" disabled>
                                 <i class="fa-solid fa-check me-2"></i>Event Passed
                             </button>

@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start();
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
@@ -23,8 +24,18 @@ if (isset($_POST["joinEvent"])) {
     }
 }
 
+else if (isset($_GET["keyword"])) {
+    $keyword = htmlspecialchars($_GET["keyword"]);
+    $events = searchEvent($keyword, $id);
+
+    if (empty($events)) {
+        $notFound = true;
+    }
+}
+
 else if (isset($_POST["logout"])) {
     logoutAccount();
+    exit;
 }
 ?>
 
@@ -33,7 +44,19 @@ else if (isset($_POST["logout"])) {
         <div class="d-flex mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">Featured Events</div>
         </div>
-        <div class="row g-4 d-flex justify-content-center">
+        <div class="row g-4 d-flex justify-content-start">
+
+            <?php if (empty($events) && !isset($notFound)): ?>
+                <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
+                    <i class="fa-solid fa-info-circle me-2 pe-1"></i>There are no events available
+                </div>
+            <?php elseif (isset($notFound)): ?>
+                <div class="alert alert-danger text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
+                    <i class="fa-solid fa-warning me-2 pe-1"></i>No event found
+                </div>
+                <?php unset($notFound); ?>
+            <?php endif; ?>
+
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
@@ -79,7 +102,7 @@ else if (isset($_POST["logout"])) {
                                             <button class="btn btn-dark w-100" disabled>
                                                 <i class="fa-solid fa-calendar-check me-2"></i>Joined
                                             </button>
-                                        <?php elseif ($isFull): ?>
+                                        <?php elseif ($isFull && !$isPassed): ?>
                                             <button class="btn btn-danger w-100" disabled>
                                                 <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
                                             </button>
@@ -108,6 +131,8 @@ else if (isset($_POST["logout"])) {
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php include "../includes/events.search.php"; ?>
 
     <?php include "../includes/logout.popup.php"; ?>
 </main>

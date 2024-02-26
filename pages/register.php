@@ -1,4 +1,6 @@
 <?php
+ob_start();
+
 include "../includes/header.php";
 require "../scripts/functions.php";
 

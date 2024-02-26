@@ -1,5 +1,6 @@
 <?php
 session_start();
+ob_start();
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
@@ -25,6 +26,7 @@ if (isset($_GET['id'])) {
 
 if (isset($_POST["logout"])) {
     logoutAccount();
+    exit;
 }
 ?>
 
@@ -43,8 +45,9 @@ if (isset($_POST["logout"])) {
 
             <?php if (empty($participants)): ?>
                 <div class="alert alert-light text-center" role="alert">
-                    This Event Doesn't Have Any Participants!
+                    <i class="fa-solid fa-info-circle me-2 pe-1"></i>This Event Doesn't Have Any Participants!
                 </div>
+                <?php unset($participants); ?>
             <?php else: ?>
                 <div class="table-responsive">
                     <table class="table table-sm table-hover">
