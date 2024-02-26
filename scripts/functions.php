@@ -149,6 +149,42 @@ function editEvent($data) {
     return mysqli_affected_rows($conn);
 }
 
+function searchEvent($keyword, $userID) {
+    global $conn;
+    global $currentFile;
+
+    $query = "SELECT * FROM events WHERE
+                (event_name LIKE '%$keyword%' OR
+                event_date LIKE '%$keyword%' OR
+                event_location LIKE '%$keyword%' OR
+                max_participants LIKE '%$keyword%' OR
+                registration_fee LIKE '%$keyword%' OR
+                organizer_name LIKE '%$keyword%')";
+
+    if ($currentFile == "my_events.php") {
+        $query .= " AND user_id = '$userID'";
+    }
+    
+    else if ($currentFile == "home.php") {
+        $query .= " AND user_id != '$userID'";
+    }
+
+    else {
+        $query = "SELECT events.* 
+                  FROM participants 
+                  JOIN events ON participants.event_id = events.event_id 
+                  WHERE participants.user_id = '$userID' AND
+                  (event_name LIKE '%$keyword%' OR
+                  event_date LIKE '%$keyword%' OR
+                  event_location LIKE '%$keyword%' OR
+                  max_participants LIKE '%$keyword%' OR
+                  registration_fee LIKE '%$keyword%' OR
+                  organizer_name LIKE '%$keyword%')";
+    }
+
+    return sqlQuery($query);
+}
+
 function deleteEvent($data) {
     global $conn;
 
@@ -183,7 +219,6 @@ function isUserJoined($userID, $eventID) {
 function isEventFull($eventID, $maxParticipants) {
     global $conn;
 
-    // Query to retrieve the number of participants registered for a specific event
     $query = "SELECT COUNT(*) AS total FROM participants WHERE event_id = '$eventID'";
     $result = mysqli_query($conn, $query);
 
