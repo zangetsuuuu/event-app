@@ -12,7 +12,7 @@
                 <div class="d-flex align-items-center gap-3">
                     <button type="button" class="btn btn-outline-secondary w-50" data-bs-dismiss="modal">Cancel</button>
                     <form action="" method="post" class="w-50">
-                        <button type="submit" name="logout" class="btn btn-danger w-100">Yes</button>
+                        <button type="submit" name="logout" class="btn btn-danger w-100">Logout</button>
                     </form>
                 </div>
             </div>
