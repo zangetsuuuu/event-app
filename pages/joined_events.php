@@ -7,7 +7,14 @@ require "../includes/session.php";
 require "../scripts/functions.php";
 
 $id = $_SESSION["user_id"];
-$events = sqlQuery("SELECT events.* FROM participants JOIN events ON participants.event_id = events.event_id WHERE participants.user_id = '$id'");
+$events = sqlQuery("SELECT events.* FROM participants
+                    JOIN events ON participants.event_id = events.event_id
+                    WHERE participants.user_id = '$id'
+                    ORDER BY CASE
+                            WHEN events.event_date >= CURRENT_DATE() THEN 0
+                            ELSE 1
+                        END,
+                        events.event_date ASC");
 
 if (isset($_GET["keyword"])) {
     $keyword = htmlspecialchars($_GET["keyword"]);

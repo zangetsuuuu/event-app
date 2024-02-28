@@ -7,7 +7,12 @@ require "../includes/session.php";
 require "../scripts/functions.php";
 
 $id = $_SESSION["user_id"];
-$events = sqlQuery("SELECT * FROM events WHERE user_id != '$id'");
+$events = sqlQuery("SELECT * FROM events
+                    WHERE event_id NOT IN (
+                        SELECT event_id
+                        FROM participants
+                        WHERE user_id = '$id') AND user_id != '$id'
+                        ORDER BY event_date DESC");
 
 if (isset($_POST["joinEvent"])) {
 
@@ -15,6 +20,7 @@ if (isset($_POST["joinEvent"])) {
         echo "
             <script>
                 alert('You have joined the event!');
+                window.location.href = 'joined_events.php';
             </script>";
     } else {
         echo "
@@ -22,18 +28,14 @@ if (isset($_POST["joinEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-}
-
-else if (isset($_GET["keyword"])) {
+} else if (isset($_GET["keyword"])) {
     $keyword = htmlspecialchars($_GET["keyword"]);
     $events = searchEvent($keyword, $id);
 
     if (empty($events)) {
         $notFound = true;
     }
-}
-
-else if (isset($_POST["logout"])) {
+} else if (isset($_POST["logout"])) {
     logoutAccount();
     exit;
 }
@@ -47,11 +49,13 @@ else if (isset($_POST["logout"])) {
         <div class="row g-4 d-flex justify-content-start">
 
             <?php if (empty($events) && !isset($notFound)): ?>
-                <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
+                <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s"
+                    role="alert">
                     <i class="fa-solid fa-info-circle me-2 pe-1"></i>There are no events available
                 </div>
             <?php elseif (isset($notFound)): ?>
-                <div class="alert alert-danger text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
+                <div class="alert alert-danger text-center animate__animated animate__fadeInDown animate__delay-1s"
+                    role="alert">
                     <i class="fa-solid fa-warning me-2 pe-1"></i>No event found
                 </div>
                 <?php unset($notFound); ?>
@@ -91,31 +95,23 @@ else if (isset($_POST["logout"])) {
                             <div class="row g-2">
                                 <div class="col-12 col-lg-10">
                                     <?php
-                                    $isJoined = isUserJoined($id, $row['event_id']);        
-                                    $isFull = isEventFull($row['event_id'], $row['max_participants']);   
-                                    $isPassed = isDatePassed($row['registration_deadline']); 
-                                    ?>         
-                                    <form action="" method="post">
-                                        <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
-                                        <input type="hidden" name="userID" value="<?= $id; ?>">
-                                        <?php if ($isJoined): ?>
-                                            <button class="btn btn-dark w-100" disabled>
-                                                <i class="fa-solid fa-calendar-check me-2"></i>Joined
-                                            </button>
-                                        <?php elseif ($isFull && !$isPassed): ?>
-                                            <button class="btn btn-danger w-100" disabled>
-                                                <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
-                                            </button>
-                                        <?php elseif ($isPassed): ?>
-                                            <button class="btn btn-secondary w-100" disabled>
-                                                <i class="fa-solid fa-lock me-2"></i>Closed
-                                            </button>
-                                        <?php else: ?>
-                                            <button class="btn btn-dark w-100" name="joinEvent">
-                                                <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                                            </button>
-                                        <?php endif; ?>
-                                    </form>
+                                    $isFull = isEventFull($row['event_id'], $row['max_participants']);
+                                    $isPassed = isDatePassed($row['registration_deadline']);
+                                    ?>
+                                    <?php if ($isFull && !$isPassed): ?>
+                                        <button class="btn btn-danger w-100" disabled>
+                                            <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
+                                        </button>
+                                    <?php elseif ($isPassed): ?>
+                                        <button class="btn btn-secondary w-100" disabled>
+                                            <i class="fa-solid fa-lock me-2"></i>Closed
+                                        </button>
+                                    <?php else: ?>
+                                        <button class="btn btn-dark w-100" data-bs-toggle="modal"
+                                            data-bs-target="#joinID<?= $row['event_id']; ?>">
+                                            <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
+                                        </button>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="col-12 col-lg-2">
                                     <a href="event_details.php?id=<?= $row['event_id']; ?>"
@@ -128,6 +124,9 @@ else if (isset($_POST["logout"])) {
                         </div>
                     </div>
                 </div>
+
+                <?php include "../includes/events.join.php"; ?>
+
             <?php endforeach; ?>
         </div>
     </div>

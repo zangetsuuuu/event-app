@@ -38,14 +38,18 @@ if (isset($_POST["createEvent"])) {
                 alert('Changes not saved!');
             </script>";
     }
-} else if (isset($_GET["keyword"])) {
+}
+
+else if (isset($_GET["keyword"])) {
     $keyword = htmlspecialchars($_GET["keyword"]);
     $events = searchEvent($keyword, $id);
 
     if (empty($events)) {
         $notFound = true;
     }
-} else if (isset($_POST["deleteEvent"])) {
+}
+
+else if (isset($_POST["deleteEvent"])) {
 
     if (deleteEvent($_POST) > 0) {
         echo "
@@ -59,7 +63,9 @@ if (isset($_POST["createEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-} else if (isset($_POST["logout"])) {
+}
+
+else if (isset($_POST["logout"])) {
     logoutAccount();
     exit;
 }

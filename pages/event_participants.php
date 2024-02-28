@@ -6,15 +6,16 @@ include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
 
-$id = $_SESSION['user_id'];
+$id = $_SESSION["user_id"];
 $participants = [];
 
-if (isset($_GET['id'])) {
-    $eventID = htmlspecialchars($_GET['id']);
+if (isset($_GET["id"])) {
+    $eventID = htmlspecialchars($_GET["id"]);
 
     // Check if the event ID is a number
     if (is_numeric($eventID)) {
-        $participants = sqlQuery("SELECT participants.*, users.name 
+        $_SESSION["event_id"] = $eventID;
+        $participants = sqlQuery("SELECT participants.*, users.name, users.email 
                                   FROM participants 
                                   INNER JOIN users ON participants.user_id = users.user_id 
                                   WHERE participants.event_id = '$eventID'
@@ -36,11 +37,17 @@ if (isset($_POST["logout"])) {
         <div class="card border shadow p-4 p-lg-5 animate__animated animate__fadeInLeft animate__delay-1s">
             <div class="card-title h3 fw-bold mb-3 mb-lg-4 pb-1 d-flex justify-content-between">
                 <div>
-                    <i class="fa-solid fa-sm fa-users me-3"></i>Event Participants
+                    <i class="fa-solid fa-sm fa-users me-3"></i>Participants
                 </div>
-                <button class="btn btn-outline-dark">
-                    <i class="fa-solid fa-file-pdf me-2"></i>Print
-                </button>
+                <form action="report.php" method="post" target="_blank">
+                    <input type="hidden" name="eventID" value="<?= $eventID; ?>">
+                    <button class="btn btn-outline-dark d-none d-lg-block" name="printReport" <?= (empty($participants)) ? 'disabled' : '' ?>>
+                        <i class="fa-solid fa-file-pdf me-2"></i>Print
+                    </button>
+                    <button class="btn btn-outline-dark d-lg-none" name="printReport" <?= (empty($participants)) ? 'disabled' : '' ?>>
+                        <i class="fa-solid fa-file-pdf"></i>
+                    </button>
+                </form>
             </div>
 
             <?php if (empty($participants)): ?>
@@ -55,21 +62,23 @@ if (isset($_POST["logout"])) {
                             <tr>
                                 <th>No.</th>
                                 <th>Name</th>
+                                <th>Email</th>
                                 <th>Registration Date</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
-                            <?php $no = 1; ?>
-                            <?php foreach ($participants as $row): ?>
-                                <tr>
-                                    <td><?= $no; ?></td>
-                                    <td><?= $row['name']; ?></td>
-                                    <td>
-                                        <?= date('d F Y, H:i', strtotime($row['registration_date'])); ?> WIB
-                                    </td>
-                                </tr>
-                            <?php $no++; ?>
-                            <?php endforeach; ?>
+                        <?php $no = 1; ?>
+                        <?php foreach ($participants as $row): ?>
+                            <tr>
+                                <td><?= $no; ?></td>
+                                <td><?= $row['name']; ?></td>
+                                <td><?= $row['email']; ?></td>
+                                <td>
+                                    <?= date('d F Y, H:i', strtotime($row['registration_date'])); ?> WIB
+                                </td>
+                            </tr>
+                        <?php $no++; ?>
+                        <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

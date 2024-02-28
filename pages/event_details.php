@@ -21,7 +21,7 @@ if (isset($_GET['id'])) {
     }
 }
 
-else if (isset($_POST["joinEvent"])) {
+if (isset($_POST["joinEvent"])) {
 
     if (joinEvent($_POST) > 0) {
         echo "
@@ -135,42 +135,39 @@ else if (isset($_POST["logout"])) {
                     $isUpcoming = timeToEvent($row['event_date']);
                     $isEventPassed = isDatePassed($row['event_date']);
                     ?>
-                    <form action="" method="post">
-                        <input type="hidden" name="eventID" value="<?= $row['event_id']; ?>">
-                        <input type="hidden" name="userID" value="<?= $id; ?>">
-                        <?php if ($isUpcoming && $isJoined): ?>
-                            <button class="btn btn-dark w-100" disabled>
-                                <i class="fa-solid fa-hourglass-start me-2"></i>
-                                <?= $isUpcoming; ?>
-                            </button>
-                        <?php elseif ($isFull && !$isPassed): ?>
-                            <button class="btn btn-danger w-100" disabled>
-                                <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
-                            </button>
-                        <?php elseif ($isPassed && !$isJoined): ?>
-                            <button class="btn btn-secondary w-100" disabled>
-                                <i class="fa-solid fa-lock me-2"></i>Closed
-                            </button>
-                        <?php elseif ($isEventPassed && $isJoined): ?>
-                            <button class="btn btn-success w-100" disabled>
-                                <i class="fa-solid fa-check me-2"></i>Event Passed
-                            </button>
-                        <?php else: ?>
-                            <button class="btn btn-dark w-100" name="joinEvent">
-                                <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
-                            </button>
-                        <?php endif; ?>
-                    </form>
+                    <?php if ($isUpcoming && $isJoined): ?>
+                        <button class="btn btn-dark w-100" disabled>
+                            <i class="fa-solid fa-hourglass-start me-2"></i>
+                            <?= $isUpcoming; ?>
+                        </button>
+                    <?php elseif ($isFull && !$isPassed): ?>
+                        <button class="btn btn-danger w-100" disabled>
+                            <i class="fa-solid fa-calendar-xmark me-2"></i>Event Full
+                        </button>
+                    <?php elseif ($isPassed && !$isJoined): ?>
+                        <button class="btn btn-secondary w-100" disabled>
+                            <i class="fa-solid fa-lock me-2"></i>Closed
+                        </button>
+                    <?php elseif ($isEventPassed && $isJoined): ?>
+                        <button class="btn btn-success w-100" disabled>
+                            <i class="fa-solid fa-check me-2"></i>Event Passed
+                        </button>
+                    <?php else: ?>
+                        <button type="submit" class="btn btn-dark w-100" data-bs-toggle="modal" data-bs-target="#joinID<?= $eventID; ?>">
+                            <i class="fa-solid fa-calendar-plus me-2"></i>Join Event
+                        </button>
+                    <?php endif; ?>
                 <?php else: ?>
                     <a href="event_participants.php?id=<?= $row['event_id']; ?>" class="btn btn-dark w-100">
                         <i class="fa-solid fa-users me-2"></i>Participants
                     </a>
                 <?php endif; ?>
-
             <?php endforeach; ?>
         </div>
     </div>
     <!-- Event Details Card End -->
+    
+    <?php include "../includes/events.join.php"; ?>
 
     <!-- Full Image Start -->
     <div class="modal fade" id="eventFullImage" tabindex="-1" aria-labelledby="fullImage" aria-hidden="true">
