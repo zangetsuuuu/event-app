@@ -35,6 +35,11 @@ function registerAccount($data) {
 
     // Add to database
     mysqli_query($conn, "INSERT INTO users (name, email, password) VALUES ('$name', '$email', '$password')");
+
+    // Add user id to user profiles
+    $newUserID = mysqli_insert_id($conn);
+    mysqli_query($conn, "INSERT INTO user_profiles (user_id) VALUES ('$newUserID')");
+
     return mysqli_affected_rows($conn);
 }
 
@@ -83,15 +88,15 @@ function createEvent($data) {
     global $conn;
 
     $userID = $data['userID'];
-    $eventName = htmlspecialchars($data['eventName']);
-    $eventDesc = htmlspecialchars($data['eventDesc']);
-    $eventDate = htmlspecialchars($data['eventDate']);
-    $eventDeadline = htmlspecialchars($data['eventDeadline']);
-    $eventLocation = htmlspecialchars($data['eventLoc']);
-    $maxParticipants = htmlspecialchars($data['maxParticipants']);
-    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : '0';
-    $organizerName = htmlspecialchars($data['organizerName']);
-    $organizerEmail = htmlspecialchars($data['organizerEmail']);
+    $eventName = mysqli_real_escape_string($conn, htmlspecialchars($data['eventName']));
+    $eventDesc = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDesc']));
+    $eventDate = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDate']));
+    $eventDeadline = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDeadline']));
+    $eventLocation = mysqli_real_escape_string($conn, htmlspecialchars($data['eventLoc']));
+    $maxParticipants = mysqli_real_escape_string($conn, htmlspecialchars($data['maxParticipants']));
+    $fee = isset($data['fee']) ? mysqli_real_escape_string($conn, htmlspecialchars($data['fee'])) : '0';
+    $organizerName = mysqli_real_escape_string($conn, htmlspecialchars($data['organizerName']));
+    $organizerEmail = mysqli_real_escape_string($conn, htmlspecialchars($data['organizerEmail']));    
 
     // Upload image
     $eventImage = uploadImage();
@@ -109,26 +114,34 @@ function editEvent($data) {
     global $conn;
 
     $eventID = $data['eventID'];
-    $eventName = htmlspecialchars($data['eventName']);
-    $eventDesc = htmlspecialchars($data['eventDesc']);
-    $eventDate = htmlspecialchars($data['eventDate']);
-    $eventDeadline = htmlspecialchars($data['eventDeadline']);
-    $eventLocation = htmlspecialchars($data['eventLoc']);
-    $maxParticipants = htmlspecialchars($data['maxParticipants']);
-    $fee = isset($data['fee']) ? htmlspecialchars($data['fee']) : '0';
-    $organizerName = htmlspecialchars($data['organizerName']);
-    $organizerEmail = htmlspecialchars($data['organizerEmail']);
+    $eventName = mysqli_real_escape_string($conn, htmlspecialchars($data['eventName']));
+    $eventDesc = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDesc']));
+    $eventDate = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDate']));
+    $eventDeadline = mysqli_real_escape_string($conn, htmlspecialchars($data['eventDeadline']));
+    $eventLocation = mysqli_real_escape_string($conn, htmlspecialchars($data['eventLoc']));
+    $maxParticipants = mysqli_real_escape_string($conn, htmlspecialchars($data['maxParticipants']));
+    $fee = isset($data['fee']) ? mysqli_real_escape_string($conn, htmlspecialchars($data['fee'])) : '0';
+    $organizerName = mysqli_real_escape_string($conn, htmlspecialchars($data['organizerName']));
+    $organizerEmail = mysqli_real_escape_string($conn, htmlspecialchars($data['organizerEmail']));
     $eventImage = '';
 
-    // Check if user upload a image
+    // Fetch the old profile picture
+    $query = sqlQuery("SELECT event_image FROM user_profiles WHERE event_id = '$eventID'");
+    $oldEventImage = $query[0]['event_image'];
+
     if (!empty($_FILES['image']['name'])) {
+        // If a new image is uploaded, delete the old one first
+        if (!empty($oldEventImage)) {
+            unlink("../public/img/uploads/" . $oldEventImage);
+        }
+
+        // Upload the new profile picture
         $eventImage = uploadImage();
         if (!$eventImage) {
             return false;
         }
     } else {
-        $query = sqlQuery("SELECT event_image FROM events WHERE event_id = '$eventID'");
-        $eventImage = $query[0]['event_image'];
+        $eventImage = $oldEventImage;
     }
     
     $query = "UPDATE events SET 
@@ -207,6 +220,18 @@ function joinEvent($data) {
     return mysqli_affected_rows($conn);
 }
 
+function unjoinEvent($data) {
+    global $conn;
+
+    $eventID = $data['eventID'];
+    $userID = $data['userID'];
+
+    $query = "DELETE FROM participants WHERE event_id = '$eventID' AND user_id = '$userID'";
+    mysqli_query($conn, $query);
+
+    return mysqli_affected_rows($conn);
+}
+
 function isUserJoined($userID, $eventID) {
     global $conn;
 
@@ -259,11 +284,62 @@ function timeToEvent($eventDate) {
     return trim($timeRemaining);
 }
 
+function editProfile($data) {
+    global $conn;
+    global $currentFile;
+
+    $userID = $data['userID'];
+    $username = mysqli_real_escape_string($conn, htmlspecialchars($data['username']));
+    $bio = mysqli_real_escape_string($conn, htmlspecialchars($data['bio']));
+    $birthdate = mysqli_real_escape_string($conn, htmlspecialchars($data['birthdate']));
+    $address = mysqli_real_escape_string($conn, htmlspecialchars($data['address']));
+    $profileImage = '';
+
+    // Fetch the old profile picture
+    $query = sqlQuery("SELECT profile_image FROM user_profiles WHERE user_id = '$userID'");
+    $oldProfileImage = $query[0]['profile_image'];
+
+    if (!empty($_FILES['image']['name'])) {
+        // If a new image is uploaded, delete the old one first
+        if (!empty($oldProfileImage)) {
+            unlink("../public/img/avatars/" . $oldProfileImage);
+        }
+
+        // Upload the new profile picture
+        $profileImage = uploadImage();
+        if (!$profileImage) {
+            return false;
+        }
+    } else {
+        $profileImage = $oldProfileImage;
+    }
+
+    // Update the user profile with the new information
+    $query = "UPDATE user_profiles SET
+                username = '$username',
+                bio = '$bio',
+                profile_image = '$profileImage',
+                date_of_birth = '$birthdate',
+                address = '$address'
+              WHERE user_id = '$userID'";
+
+    mysqli_query($conn, $query);
+    return mysqli_affected_rows($conn);
+}
+
 function uploadImage() {
+    global $currentFile;
+
     $fileName = $_FILES["image"]["name"];
     $fileSize = $_FILES["image"]["size"];
     $error = $_FILES["image"]["error"];
     $tmpName = $_FILES["image"]["tmp_name"];
+
+    // Handle errors
+    if ($error !== UPLOAD_ERR_OK) {
+        echo "<script>alert('Error uploading image!')</script>";
+        return false;
+    }
 
     // Check if the uploaded file is an image
     $validImageExtensions = ["jpg", "jpeg", "png", "webp"];
@@ -286,6 +362,11 @@ function uploadImage() {
     $newImageName .= $imageExtension;
 
     // Image passed validation, ready to be uploaded
-    move_uploaded_file($tmpName, "../public/img/uploads/" . $newImageName);
+    if ($currentFile == "my_events") {
+        move_uploaded_file($tmpName, "../public/img/uploads/" . $newImageName);
+    } else if ($currentFile == "profile.php") {
+        move_uploaded_file($tmpName, "../public/img/avatars/" . $newImageName);
+    }
+
     return $newImageName;
 }
