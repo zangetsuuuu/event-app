@@ -12,6 +12,14 @@ $participants = [];
 if (isset($_GET["id"])) {
     $eventID = htmlspecialchars($_GET["id"]);
 
+    $isUserValid = sqlQuery("SELECT * FROM events WHERE event_id = '$eventID' AND user_id = '$id'");
+
+    // Check if the user is the event owner
+    if (!$isUserValid) {
+        header("location: my_events.php");
+        exit;
+    }
+
     // Check if the event ID is a number
     if (is_numeric($eventID)) {
         $_SESSION["event_id"] = $eventID;
