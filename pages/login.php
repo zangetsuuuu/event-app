@@ -11,11 +11,7 @@ if (isset($_POST["login"])) {
         header("location: home.php");
         exit;
     } else {
-        echo "
-            <script>
-                alert('Name or password are wrong!');
-                window.location.href = 'login.php';
-            </script>";
+        $wrong = true;
     }
 }
 
@@ -45,6 +41,13 @@ if (isset($_SESSION["login"])) {
                                     <div class="h5 fw-normal mb-3 pb-3" style="letter-spacing: 1px;">
                                         Enter your email and password.
                                     </div>
+
+                                    <?php if (isset($wrong)): ?>
+                                        <div class="alert alert-danger" role="alert">
+                                            <i class="fa-solid fa-warning me-2 pe-1"></i>Email or password is wrong!
+                                        </div>
+                                    <?php endif; ?>
+
                                     <div class="form-floating mb-3">
                                         <input type="email" class="form-control" name="email" id="email"
                                             placeholder="name@example.com">
