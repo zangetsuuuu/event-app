@@ -4,7 +4,7 @@ require "../scripts/functions.php";
 
 use \Mpdf\Mpdf;
 
-$mpdf = new Mpdf(['mode' => 'utf-8']);
+$mpdf = new Mpdf(['mode' => 'utf-8', 'format'  => [240, 297]]);
 
 $eventID = htmlspecialchars($_POST["eventID"]);
 
@@ -80,6 +80,5 @@ $html .= '
     </body>
 </html>';
 
-$mpdf->AddPage('L');
 $mpdf->WriteHTML($html);
 $mpdf->Output('event-participants-report-' . $eventID . '.pdf', \Mpdf\Output\Destination::INLINE);
