@@ -56,19 +56,28 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menu">
                                 <li class="dropdown-header"><i class="fa-solid fa-user-circle fa-sm me-2"></i>Account
                                 </li>
-                                <li><a class="dropdown-item <?= ($currentFile == 'profile.php') ? 'active' : ''; ?>"
-                                        href="profile.php">Profile</a></li>
-                                <li><a class="dropdown-item <?= ($currentFile == 'change_password.php') ? 'active' : ''; ?>"
-                                        href="change_password.php">Change Password</a></li>
+                                <li>
+                                    <a class="dropdown-item <?= ($currentFile == 'profile.php') ? 'active' : ''; ?>"
+                                        href="profile.php">Profile</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item <?= ($currentFile == 'change_password.php') ? 'active' : ''; ?>"
+                                        href="change_password.php">Change Password</a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
-                                <li class="dropdown-header"><i
-                                        class="fa-solid fa-question-circle fa-sm me-2"></i>Support</li>
-                                <li><a class="dropdown-item <?= ($currentFile == 'feedback.php') ? 'active' : ''; ?>"
-                                        href="#">Feedback</a></li>
-                                <li><a class="dropdown-item <?= ($currentFile == 'help_faq.php') ? 'active' : ''; ?>"
-                                        href="#">Help and FAQ</a></li>
+                                <li class="dropdown-header">
+                                    <i class="fa-solid fa-question-circle fa-sm me-2"></i>Support
+                                </li>
+                                <li>
+                                    <a class="dropdown-item <?= ($currentFile == 'feedback.php') ? 'active' : ''; ?>"
+                                        href="#">Feedback</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item <?= ($currentFile == 'help_faq.php') ? 'active' : ''; ?>"
+                                        href="#">Help and FAQ</a>
+                                </li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -83,11 +92,11 @@
                         <span class="text-secondary me-2 mt-2 divider vr" style="height: 25px;"></span>
                         <li class="nav-item">
                             <button class="btn btn-outline-light d-none d-lg-block" data-bs-toggle="modal"
-                                data-bs-target="#searchEvent" <?= ($currentFile === 'event_details.php' || $currentFile === 'event_participants.php') ? 'disabled' : ''; ?>>
+                                data-bs-target="#searchEvent" <?= ($currentFile === 'event_details.php' || $currentFile === 'event_participants.php' || $currentFile === 'profile.php') ? 'disabled' : ''; ?>>
                                 <i class="fa-solid fa-search me-2"></i>Search
                             </button>
                             <button class="btn btn-outline-light d-lg-none w-100" data-bs-toggle="modal"
-                                data-bs-target="#searchEvent" <?= ($currentFile === 'event_details.php' || $currentFile === 'event_participants.php') ? 'disabled' : ''; ?>>
+                                data-bs-target="#searchEvent" <?= ($currentFile === 'event_details.php' || $currentFile === 'event_participants.php' || $currentFile === 'profile.php') ? 'disabled' : ''; ?>>
                                 <i class="fa-solid fa-search me-2"></i>Search
                             </button>
                         </li>
