@@ -11,8 +11,24 @@ $events = sqlQuery("SELECT * FROM events
                     WHERE event_id NOT IN (
                         SELECT event_id
                         FROM participants
-                        WHERE user_id = '$id') AND user_id != '$id'
-                        ORDER BY event_date DESC");
+                        WHERE user_id = '$id'
+                    ) AND user_id != '$id'
+                    ORDER BY 
+                        CASE
+                            WHEN event_date > CURRENT_DATE() AND registration_deadline >= CURRENT_DATE() THEN 0
+                            WHEN event_date <= CURRENT_DATE() AND registration_deadline >= CURRENT_DATE() THEN 1
+                            ELSE 2
+                        END,
+                        event_date DESC");
+
+if (isset($_GET["keyword"])) {
+    $keyword = htmlspecialchars($_GET["keyword"]);
+    $events = searchEvent($keyword, $id);
+
+    if (empty($events)) {
+        $notFound = true;
+    }
+}
 
 if (isset($_POST["joinEvent"])) {
 
@@ -28,14 +44,9 @@ if (isset($_POST["joinEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-} else if (isset($_GET["keyword"])) {
-    $keyword = htmlspecialchars($_GET["keyword"]);
-    $events = searchEvent($keyword, $id);
+}
 
-    if (empty($events)) {
-        $notFound = true;
-    }
-} else if (isset($_POST["logout"])) {
+else if (isset($_POST["logout"])) {
     logoutAccount();
     exit;
 }
@@ -82,7 +93,7 @@ if (isset($_POST["joinEvent"])) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title fw-bold mb-2">
+                            <h5 class="card-title fw-bold mb-2 text-truncate">
                                 <?= $row['event_name']; ?>
                             </h5>
                             <p class="card-text text-secondary d-flex align-items-center">
