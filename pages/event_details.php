@@ -27,6 +27,7 @@ if (isset($_POST["joinEvent"])) {
         echo "
             <script>
                 alert('You have joined the event!');
+                window.location.href = 'joined_events.php';
             </script>";
     } else {
         echo "
@@ -95,37 +96,33 @@ else if (isset($_POST["logout"])) {
                     </div>
                 </div>
                 <hr class="w-25">
-                <div class="row g-2 g-md-3 g-lg-4 mb-2 mb-lg-4 pt-3">
+                <div class="row g-4 mb-2 mb-lg-4 pt-3 pb-lg-1">
                     <div class="col-12 col-lg-6">
-                        <div class="fw-medium mb-3">Datetime:</div>
-                        <div class="mb-2">
-                            <?= date('d F Y, H:i', strtotime($row['event_date'])); ?> WIB
-                        </div>
+                        <div class="fw-semibold mb-2 pb-1">Datetime:</div>
+                        <div><?= date('d F Y, H:i', strtotime($row['event_date'])); ?> WIB</div>
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <label class="fw-medium mb-3">Registration Deadline:</label>
-                        <div class="mb-2">
-                            <?= date('d F Y, H:i', strtotime($row['registration_deadline'])); ?> WIB
-                        </div>
+                    <div class="col-12 col-lg-6 mb-2 pb-2 mb-lg-0 pb-lg-0">
+                        <label class="fw-semibold mb-2 pb-1">Registration Deadline:</label>
+                        <div><?= date('d F Y, H:i', strtotime($row['registration_deadline'])); ?> WIB</div>
                     </div>
                 </div>
-                <div class="row g-0 g-md-1 g-lg-4 mb-2 mb-lg-4">
+                <div class="row g-4 mb-2 mb-lg-4 pb-lg-1">
                     <div class="col-12 col-lg-6">
-                        <label class="fw-medium mb-2">Participants:</label>
+                        <label class="fw-semibold mb-2 pb-1">Participants:</label>
                         <?php foreach ($totalParticipants as $participants): ?>
-                            <input type="text" class="form-control-plaintext"
-                                value="<?= $participants['total'] . '/' . $row['max_participants']; ?>">
+                            <div><?= $participants['total'] . '/' . $row['max_participants']; ?></div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="col-12 col-lg-6">
-                        <label class="fw-medium mb-2">Fee:</label>
-                        <input type="text" class="form-control-plaintext"
-                            value="<?= $row['registration_fee'] == 0 ? "Free" : 'Rp. ' . number_format($row['registration_fee'], 0, ',', '.'); ?>">
+                    <div class="col-12 col-lg-6 mb-2 pb-2 mb-lg-0 pb-lg-0">
+                        <label class="fw-semibold mb-2 pb-1">Fee:</label>
+                        <div>
+                            <?= $row['registration_fee'] == 0 ? "Free" : 'Rp. ' . number_format($row['registration_fee'], 0, ',', '.'); ?>
+                        </div>
                     </div>
                 </div>
-                <div class="mb-4">
-                    <label class="fw-medium mb-2">Location:</label>
-                    <input type="text" class="form-control-plaintext" value="<?= $row['event_location']; ?>">
+                <div class="mb-4 pb-2">
+                    <label class="fw-semibold mb-2 pb-1">Location:</label>
+                    <div><?= $row['event_location']; ?></div>
                 </div>
                 <?php if ($row['user_id'] != $id): ?>
                     <?php
