@@ -7,7 +7,7 @@ require "../includes/session.php";
 require "../scripts/functions.php";
 
 $id = $_SESSION["user_id"];
-$events = sqlQuery("SELECT * FROM events WHERE user_id = '$id'");
+$events = sqlQuery("SELECT * FROM events WHERE user_id = '$id' ORDER BY created_at DESC");
 $users = sqlQuery("SELECT * FROM users WHERE user_id = '$id'");
 
 if (isset($_GET["keyword"])) {
@@ -30,7 +30,7 @@ if (isset($_POST["createEvent"])) {
     } else {
         echo "
             <script>
-                alert('Something wrong!');
+                alert('Event not created!');
             </script>";
     }
 }
