@@ -10,6 +10,15 @@ $id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events WHERE user_id = '$id'");
 $users = sqlQuery("SELECT * FROM users WHERE user_id = '$id'");
 
+if (isset($_GET["keyword"])) {
+    $keyword = htmlspecialchars($_GET["keyword"]);
+    $events = searchEvent($keyword, $id);
+
+    if (empty($events)) {
+        $notFound = true;
+    }
+}
+
 if (isset($_POST["createEvent"])) {
 
     if (createEvent($_POST) > 0) {
@@ -24,7 +33,9 @@ if (isset($_POST["createEvent"])) {
                 alert('Something wrong!');
             </script>";
     }
-} else if (isset($_POST["editEvent"])) {
+}
+
+else if (isset($_POST["editEvent"])) {
 
     if (editEvent($_POST) > 0) {
         echo "
@@ -37,15 +48,6 @@ if (isset($_POST["createEvent"])) {
             <script>
                 alert('Changes not saved!');
             </script>";
-    }
-}
-
-else if (isset($_GET["keyword"])) {
-    $keyword = htmlspecialchars($_GET["keyword"]);
-    $events = searchEvent($keyword, $id);
-
-    if (empty($events)) {
-        $notFound = true;
     }
 }
 
@@ -99,7 +101,7 @@ else if (isset($_POST["logout"])) {
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
-                        <!-- Isi card event -->
+                        <!-- Card content -->
                         <div class="position-relative">
                             <img src="../public/img/uploads/<?= $row['event_image']; ?>"
                                 class="card-img-top img-fluid object-fit-cover" alt="<?= $row['event_name']; ?>"
@@ -118,7 +120,7 @@ else if (isset($_POST["logout"])) {
                             </div>
                         </div>
                         <div class="card-body">
-                            <h5 class="card-title fw-bold mb-2">
+                            <h5 class="card-title fw-bold mb-2 text-truncate">
                                 <?= $row['event_name']; ?>
                             </h5>
                             <p class="card-text text-secondary d-flex align-items-center">
@@ -144,9 +146,11 @@ else if (isset($_POST["logout"])) {
                                             More
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="eventMenu">
-                                            <li><a class="dropdown-item" href="event_details.php?id=<?= $row['event_id']; ?>">Details</a>
+                                            <li>
+                                                <a class="dropdown-item" href="event_details.php?id=<?= $row['event_id']; ?>">Details</a>
                                             </li>
-                                            <li><a class="dropdown-item" href="event_participants.php?id=<?= $row['event_id']; ?>">Participants</a>
+                                            <li>
+                                                <a class="dropdown-item" href="event_participants.php?id=<?= $row['event_id']; ?>">Participants</a>
                                             </li>
                                             <li><hr class="dropdown-divider"></li>
                                             <li>
