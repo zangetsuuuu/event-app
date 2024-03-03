@@ -1,4 +1,15 @@
-<?php include "../includes/header.guest.php"; ?>
+<?php
+session_start();
+ob_start();
+
+include "../includes/header.guest.php";
+require_once "../includes/cookie.php";
+
+if (isset($_SESSION["login"])) {
+    header("location: pages/home.php");
+    exit;
+}
+?>
 
 <main>
     <div class="px-4 pt-5 mt-2 text-center">
