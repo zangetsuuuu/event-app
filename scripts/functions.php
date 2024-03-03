@@ -66,8 +66,8 @@ function loginAccount($data) {
             // Check remember me
             if (isset($_POST["rememberMe"])) {
                 // Set cookie
-                setcookie("id", $row["id"], time() + 3600);
-                setcookie("key", hash("sha256", $row["name"]), time() + 3600);
+                setcookie("id", $row["user_id"], time() + 86400, "/", "", false, true);
+                setcookie("key", hash("sha256", $row["name"]), time() + 86400, "/", "", false, true);
             }
             return true;
         }
@@ -79,6 +79,9 @@ function logoutAccount() {
     session_unset();
     $_SESSION = [];
     session_destroy();
+
+    setcookie('id', '', time() - 86400, '/');
+    setcookie('key', '', time() - 86400, '/');
 
     header("Location: login.php");
     exit;
