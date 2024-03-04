@@ -5,6 +5,7 @@ ob_start();
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
+require "../includes/pagination.php";
 
 $id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT events.* FROM participants
@@ -15,7 +16,8 @@ $events = sqlQuery("SELECT events.* FROM participants
                             WHEN events.event_date >= CURRENT_DATE() THEN 0
                             ELSE 1
                         END,
-                        events.event_date ASC");
+                        events.event_date ASC
+                    LIMIT $offset, $pageData");
 
 if (isset($_GET["keyword"])) {
     $keyword = htmlspecialchars($_GET["keyword"]);
@@ -48,7 +50,7 @@ else if (isset($_POST["logout"])) {
         <div class="d-flex mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">Joined Events</div>
         </div>
-        <div class="row g-4 d-flex justify-content-start">
+        <div class="row g-4 d-flex justify-content-start mb-4">
 
             <?php if (empty($events) && !isset($notFound)): ?>
                 <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s" role="alert">
@@ -141,6 +143,8 @@ else if (isset($_POST["logout"])) {
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php include "../includes/page.navigation.php"; ?>
 
     <?php include "../includes/events.search.php"; ?>
     

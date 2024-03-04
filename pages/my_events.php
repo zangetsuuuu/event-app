@@ -5,9 +5,11 @@ ob_start();
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
+require "../includes/pagination.php";
 
 $id = $_SESSION["user_id"];
-$events = sqlQuery("SELECT * FROM events WHERE user_id = '$id' ORDER BY created_at DESC");
+$events = sqlQuery("SELECT * FROM events WHERE user_id = '$id' ORDER BY created_at DESC
+                    LIMIT $offset, $pageData");
 $users = sqlQuery("SELECT * FROM users WHERE user_id = '$id'");
 
 if (isset($_GET["keyword"])) {
@@ -97,7 +99,7 @@ else if (isset($_POST["logout"])) {
         <?php endif; ?>
 
 
-        <div class="row g-4 d-flex justify-content-start">
+        <div class="row g-4 d-flex justify-content-start mb-4">
             <?php foreach ($events as $row): ?>
                 <div class="col-12 col-md-6 col-lg-4 mb-4">
                     <div class="card shadow-sm animate__animated animate__fadeInLeft animate__delay-1s">
@@ -174,6 +176,8 @@ else if (isset($_POST["logout"])) {
         </div>
     </div>
     <!-- My Events Card List End -->
+
+    <?php include "../includes/page.navigation.php"; ?>
 
     <?php include "../includes/events.create.php"; ?>
 

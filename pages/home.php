@@ -5,6 +5,7 @@ ob_start();
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
+require "../includes/pagination.php";
 
 $id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events
@@ -19,7 +20,8 @@ $events = sqlQuery("SELECT * FROM events
                             WHEN event_date <= CURRENT_DATE() AND registration_deadline >= CURRENT_DATE() THEN 1
                             ELSE 2
                         END,
-                        event_date DESC");
+                        event_date DESC
+                    LIMIT $offset, $pageData");
 
 if (isset($_GET["keyword"])) {
     $keyword = htmlspecialchars($_GET["keyword"]);
@@ -57,7 +59,7 @@ else if (isset($_POST["logout"])) {
         <div class="d-flex mb-4 border-bottom animate__animated animate__fadeInDown animate__delay-1s">
             <div class="h3">Featured Events</div>
         </div>
-        <div class="row g-4 d-flex justify-content-start">
+        <div class="row g-4 d-flex justify-content-start mb-4">
 
             <?php if (empty($events) && !isset($notFound)): ?>
                 <div class="alert alert-light text-center animate__animated animate__fadeInDown animate__delay-1s"
@@ -141,6 +143,8 @@ else if (isset($_POST["logout"])) {
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php include "../includes/page.navigation.php"; ?>
 
     <?php include "../includes/events.search.php"; ?>
 
