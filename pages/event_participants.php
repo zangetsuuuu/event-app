@@ -68,17 +68,17 @@ if (isset($_POST["logout"])) {
                     <table class="table table-sm table-hover">
                         <thead>
                             <tr>
-                                <th>No.</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Registration Date</th>
+                                <th scope="col">No.</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Registration Date</th>
                             </tr>
                         </thead>
                         <tbody class="table-group-divider">
                         <?php $no = 1; ?>
                         <?php foreach ($participants as $row): ?>
                             <tr>
-                                <td><?= $no; ?></td>
+                                <th scope="row"><?= $no; ?></th>
                                 <td><?= $row['name']; ?></td>
                                 <td><?= $row['email']; ?></td>
                                 <td>
