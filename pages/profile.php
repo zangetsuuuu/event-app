@@ -32,7 +32,6 @@ else if (isset($_POST["logout"])) {
 ?>
 
 <main>
-    <!-- Event Details Card Start -->
     <div class="container mt-5 pt-5 mb-5">
         <div class="card border shadow p-4 p-lg-5 animate__animated animate__fadeInLeft animate__delay-1s">
             <div class="card-title h3 fw-bold mb-4 pb-3">
@@ -85,28 +84,8 @@ else if (isset($_POST["logout"])) {
             <?php endforeach; ?>
         </div>
     </div>
-    <!-- Event Details Card End -->
 
     <?php include "../includes/events.join.php"; ?>
-
-    <!-- Full Image Start -->
-    <div class="modal fade" id="eventFullImage" tabindex="-1" aria-labelledby="fullImage" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <?php foreach ($events as $row): ?>
-                        <img src="../public/img/uploads/<?= $row['event_image']; ?>"
-                            class="img-fluid object-fit-cover rounded-3 border border-2 h-100 w-100"
-                            alt="<?= $row['event_name']; ?>">
-                    <?php endforeach; ?>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Full Image End -->
 
     <?php include "../includes/logout.popup.php"; ?>
 </main>
