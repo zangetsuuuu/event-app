@@ -330,6 +330,31 @@ function editProfile($data) {
     return mysqli_affected_rows($conn);
 }
 
+function changePassword($data) {
+    global $conn;
+
+    $userID = $data['userID'];
+    $oldPassword = mysqli_real_escape_string($conn, htmlspecialchars($data['oldPassword']));
+    $newPassword = mysqli_real_escape_string($conn, htmlspecialchars($data['newPassword']));
+
+    $query = "SELECT password FROM users WHERE user_id = '$userID'";
+    $result = mysqli_query($conn, $query);
+
+    if (mysqli_num_rows($result) === 1) {
+        $row = mysqli_fetch_assoc($result);
+
+        if (password_verify($oldPassword, $row['password'])) {
+            
+            $query = "UPDATE users SET password = '$newPassword' WHERE user_id = '$userID'";
+            mysqli_query($conn, $query);
+
+            return mysqli_affected_rows($conn);
+        }
+    } else {
+        return false;
+    }
+}
+
 function uploadImage() {
     global $currentFile;
 
