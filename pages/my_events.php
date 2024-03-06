@@ -1,13 +1,13 @@
 <?php
 session_start();
 ob_start();
+$id = $_SESSION["user_id"];
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
 require "../includes/pagination.php";
 
-$id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events WHERE user_id = '$id' ORDER BY created_at DESC
                     LIMIT $offset, $pageData");
 $users = sqlQuery("SELECT * FROM users WHERE user_id = '$id'");

@@ -1,13 +1,13 @@
 <?php
 session_start();
 ob_start();
+$id = $_SESSION["user_id"];
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
 require "../includes/pagination.php";
 
-$id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT events.* FROM participants
                     JOIN events ON participants.event_id = events.event_id
                     WHERE participants.user_id = '$id'

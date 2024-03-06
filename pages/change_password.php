@@ -1,12 +1,11 @@
 <?php
 session_start();
 ob_start();
+$id = $_SESSION['user_id'];
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
-
-$id = $_SESSION['user_id'];
 
 if (isset($_POST["changePassword"])) {
 

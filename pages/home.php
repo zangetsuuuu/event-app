@@ -1,13 +1,13 @@
 <?php
 session_start();
 ob_start();
+$id = $_SESSION["user_id"];
 
 include "../includes/header.logged.php";
 require "../includes/session.php";
 require "../scripts/functions.php";
 require "../includes/pagination.php";
 
-$id = $_SESSION["user_id"];
 $events = sqlQuery("SELECT * FROM events
                     WHERE event_id NOT IN (
                         SELECT event_id
