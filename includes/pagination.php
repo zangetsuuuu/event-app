@@ -1,7 +1,18 @@
 <?php
 $pageData = 20;
 
-$queryCount = "SELECT COUNT(*) AS total FROM events";
+if ($currentFile == 'home.php') {
+    $queryCount = "SELECT COUNT(*) AS total FROM events";
+}
+
+else if ($currentFile == 'my_events.php') {
+    $queryCount = "SELECT COUNT(*) AS total FROM events WHERE user_id = $id";
+}
+
+else if ($currentFile == 'joined_events.php') {
+    $queryCount = "SELECT COUNT(*) AS total FROM participants WHERE user_id = $id";
+}
+
 $resultCount = mysqli_query($conn, $queryCount);
 $rowCount = mysqli_fetch_assoc($resultCount);
 $totalRows = $rowCount['total'];
